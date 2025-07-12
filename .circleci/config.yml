@@ -48,31 +48,38 @@ jobs:
     steps:
       - checkout
       - node/install-packages
-      - run: 
-          name: Set up GIT credentials
+      - run:
+          name: Set up git credentials
           command: |
             git config --global user.email $GIT_EMAIL
             git config --global user.name $GIT_NAME
-      - run: 
-          name: Release the code
-          command: npm run release
+      - run:
+          name: Run release
+          command: |
+            npm run release
+            git push --follow-tags "https://${GH_TOKEN}@github.com/imran-codes/react-component-library.git" main
   
   publish:
     executor: 
       name: node/default
       tag: "22.14.0" 
-    description: Publish the code
+    description: Publish to npm
     steps:
       - checkout
       - node/install-packages
-      - run: 
-          name: Login to NPM
-          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-      - run: 
-          name: Publish the code
-          command: npm run publish
-          environment:
-            NPM_TOKEN: $NPM_TOKEN
+      - run:
+          name: Check if npm version is the same and publish to npm
+          command: |
+            CURRENT_VERSION=$(npm show shadow-ui version)
+            LOCAL_VERSION=$(node -pe "require('./package.json').version")
+
+            if [ "$CURRENT_VERSION" != "$LOCAL_VERSION" ]; then
+              echo "Versions are different. Publishing to npm."
+              echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+              npm publish
+            else
+              echo "Versions are the same. Skipping npm publish."
+            fi
 
 workflows: 
   build_app:
