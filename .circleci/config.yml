@@ -70,7 +70,7 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
       - run: 
           name: Publish the code
-          command: npm publish
+          command: npm publish --access public
           environment:
             NPM_TOKEN: $NPM_TOKEN
 
