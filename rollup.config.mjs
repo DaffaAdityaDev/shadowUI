@@ -31,13 +31,16 @@ export default [
       typescript({
         tsconfig: "./tsconfig.json",
         exclude: ["**/*.test.tsx", "**/*.test.ts", "**/*.stories.ts"],
+        declaration: true,
+        declarationDir: "dist/types"
       }),
       postcss({ extensions: [".css"], inject: true, extract: false }),
     ],
     external: ["react", "react-dom", "react/jsx-runtime"],
   },
   {
-    input: "dist/esm/types/index.d.ts",
+    // Fix: The actual path where TypeScript generates the declarations
+    input: "dist/esm/types/src/index.d.ts",
     output: [{ file: "dist/index.d.ts", format: "esm" }],
     plugins: [dts()],
     external: [/\.css$/],
