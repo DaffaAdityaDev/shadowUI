@@ -65,19 +65,14 @@ jobs:
     steps:
       - checkout
       - node/install-packages
-      - run:
-          name: Check if npm version is the same and publish to npm
-          command: |
-            CURRENT_VERSION=$(npm show shadow-ui version)
-            LOCAL_VERSION=$(node -pe "require('./package.json').version")
-
-            if [ "$CURRENT_VERSION" != "$LOCAL_VERSION" ]; then
-              echo "Versions are different. Publishing to npm."
-              echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-              npm publish
-            else
-              echo "Versions are the same. Skipping npm publish."
-            fi
+      - run: 
+          name: Login to NPM
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+      - run: 
+          name: Publish the code
+          command: npm publish
+          environment:
+            NPM_TOKEN: $NPM_TOKEN
 
 workflows: 
   build_app:
