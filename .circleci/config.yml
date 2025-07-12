@@ -48,15 +48,14 @@ jobs:
     steps:
       - checkout
       - node/install-packages
-      - run:
-          name: Set up git credentials
+      - run: 
+          name: Set up GIT credentials
           command: |
             git config --global user.email $GIT_EMAIL
             git config --global user.name $GIT_NAME
-      - run:
-          name: Run release
-          command: |
-            npm run release
+      - run: 
+          name: Release the code
+          command: npm run release
   
   publish:
     executor: 
