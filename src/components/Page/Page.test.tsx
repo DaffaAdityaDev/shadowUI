@@ -17,7 +17,7 @@ describe("Page", () => {
   it("rende the correct styling", () => {
     const title = "Test Title";
     const children = "test children";
-    const { getByText, getByTestId } = render(
+    const { getByTestId } = render(
       <Page title={title} data-testid="page-container">
         {children}
       </Page>
