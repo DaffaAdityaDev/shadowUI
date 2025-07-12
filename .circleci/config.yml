@@ -40,6 +40,30 @@ jobs:
           name: Build the code
           command: npm run build
 
+  release:
+    executor: 
+      name: node/default
+      tag: "22.14.0" 
+    description: Release the code
+    steps:
+      - checkout
+      - node/install-packages
+      - run: 
+          name: Release the code
+          command: npm run release
+  
+  publish:
+    executor: 
+      name: node/default
+      tag: "22.14.0" 
+    description: Publish the code
+    steps:
+      - checkout
+      - node/install-packages
+      - run: 
+          name: Publish the code
+          command: npm run publish
+
 workflows: 
   build_app:
     jobs:
@@ -51,3 +75,11 @@ workflows:
           requires:
             - run_tests
             - lint_code
+      - release:
+          requires:
+            - build
+            - run_tests
+            - lint_code
+      - publish:
+          requires:
+            - release
