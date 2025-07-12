@@ -1,5 +1,5 @@
 {
-  "name": "shadcn-ui",
+  "name": "shadow-ui",
   "version": "0.0.1",
   "description": "This is a ui library for shadowui.",
   "main": "dist/cjs/index.js",
