@@ -65,7 +65,9 @@ jobs:
     steps:
       - checkout
       - node/install-packages
-      
+      - run: 
+          name: Login to NPM
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
       - run: 
           name: Publish the code
           command: npm run publish
