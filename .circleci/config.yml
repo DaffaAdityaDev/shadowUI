@@ -5,7 +5,9 @@ orbs:
 
 jobs: 
   lint_code:
-    executor: node/default
+    executor: 
+      name: node/default
+      tag: "22.14.0" 
     description: Lint the code
     steps:
       - checkout
@@ -13,8 +15,11 @@ jobs:
       - run:
           name: Lint the code
           command: npm run lint:fix
+          
   run_tests:
-    executor: node/default
+    executor: 
+      name: node/default
+      tag: "22.14.0" 
     description: Run the tests
     steps:
       - checkout
@@ -22,8 +27,11 @@ jobs:
       - run:
           name: Run the tests
           command: npm run test
+          
   build:
-    executor: node/default
+    executor: 
+      name: node/default
+      tag: "22.14.0" 
     description: Build the code
     steps:
       - checkout
