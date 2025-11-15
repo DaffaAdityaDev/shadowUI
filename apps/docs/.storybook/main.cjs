@@ -3,10 +3,7 @@ const tailwindcss = require("@tailwindcss/postcss");
 
 const config = {
   stories: ["../stories/*.stories.tsx", "../stories/**/*.stories.tsx"],
-  addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-  ],
+  addons: ["@storybook/addon-links", "@storybook/addon-docs"],
   framework: {
     name: "@storybook/react-vite",
     options: {},
