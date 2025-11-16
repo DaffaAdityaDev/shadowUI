@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@source "../node_modules/@shadoworg/shadowui/dist/**/*.{js,mjs}";
-
+/* @source "../node_modules/@shadoworg/shadowui/dist*.{js,mjs}"; */
+/* @import "@shadoworg/shadowui/dist/styles.css"; */
 
 :root {
   --background: #ffffff;

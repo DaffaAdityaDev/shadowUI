@@ -3,6 +3,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:frontend": "concurrently -n \"UI,Frontend\" -c \"blue,green\" \"pnpm --filter @shadoworg/shadowui dev\" \"pnpm -C frontend dev\"",
     "lint": "turbo run lint",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -18,5 +19,8 @@
     "turbo": "^2.6.1"
   },
   "packageManager": "pnpm@10.22.0",
-  "name": "design-system"
+  "name": "design-system",
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  }
 }

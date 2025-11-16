@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@shadoworg/shadowui": "^0.0.3",
+    "@shadoworg/shadowui": "workspace:*",
     "next": "16.0.3",
     "react": "19.2.0",
     "react-dom": "19.2.0"
@@ -21,6 +21,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
+    "postcss-import": "^16.1.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
