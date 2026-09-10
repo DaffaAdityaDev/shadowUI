@@ -2,20 +2,43 @@ import { copyFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { defineConfig } from "tsup";
 
+// Scan "src/components" to auto-detect all component entry files (e.g. Button/button.tsx, Badge/badge.tsx)
+const componentEntries = readdirSync("src/components", { withFileTypes: true })
+  .filter((directory) => directory.isDirectory())
+  .flatMap((directory) => {
+    const componentDir = join("src/components", directory.name);
+    return readdirSync(componentDir)
+      .filter((fileName) => {
+        const isTsxFile = fileName.endsWith(".tsx");
+        const isTestOrStory = fileName.includes(".test.") || fileName.includes(".stories.");
+        return isTsxFile && !isTestOrStory;
+      })
+      .map((fileName) => join(componentDir, fileName).replace(/\\/g, "/"));
+  });
+
+
 export default defineConfig((options) => ({
   entryPoints: [
     "src/index.ts",
-    "src/components/Button/button.tsx",
+    "src/utils/fluidGlass/index.ts",
+    ...componentEntries,
     "src/styles.css",
   ],
   format: ["cjs", "esm"],
   external: ["react", "react-dom"],
+  banner: {
+    js: '"use client";',
+  },
   outDir: "dist",
   loader: {
     ".css": "file",
   },
   dts: {
-    entry: ["src/index.ts", "src/components/Button/button.tsx"],
+    entry: [
+      "src/index.ts",
+      "src/utils/fluidGlass/index.ts",
+      ...componentEntries,
+    ],
   },
   // dts: true,
   treeshake: true,

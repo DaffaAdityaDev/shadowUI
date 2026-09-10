@@ -1,0 +1,8 @@
+@theme {
+  /* semantic tokens used by components */
+  --color-primary: var(--color-primary-600);
+  --color-on-primary: #ffffff;
+
+  --bg-muted: var(--color-neutral-100);
+  --text-default: var(--color-neutral-900);
+}

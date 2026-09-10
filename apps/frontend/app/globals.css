@@ -1,0 +1,43 @@
+@import "tailwindcss";
+/* @source "../node_modules/@shadoworg/shadowui/dist*.{js,mjs}"; */
+/* @import "@shadoworg/shadowui/dist/styles.css"; */
+
+/* :root {
+  --background: #ffffff;
+  --foreground: #171717;
+} */
+
+/* @theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+} */
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+} */
+
+.fluid-glass-card {
+  /* Trik utamanya ada di sini: */
+  backdrop-filter: url(#fluid-glass-filter) blur(8px) saturate(140%);
+  -webkit-backdrop-filter: url(#fluid-glass-filter) blur(8px) saturate(140%);
+
+  /* Styling kosmetik pelengkap agar terasa seperti kaca fisik: */
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8),   /* Specular highlight atas */
+    inset 0 -1px 2px rgba(255, 255, 255, 0.2);  /* Rim light bawah */
+}

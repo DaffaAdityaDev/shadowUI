@@ -1,7 +1,10 @@
 {
   "name": "@shadoworg/shadowui",
   "version": "0.0.4",
-  "sideEffects": false,
+  "sideEffects": [
+    "dist/styles.css"
+  ],
+  "style": "dist/styles.css",
   "license": "MIT",
   "description": "SHADOWUI - A modern React component library",
   "keywords": [
@@ -22,6 +25,7 @@
   },
   "files": [
     "dist",
+    "tokens",
     "README.md"
   ],
   "main": "./dist/index.js",
@@ -38,6 +42,22 @@
       "import": "./dist/components/Button/button.mjs",
       "require": "./dist/components/Button/button.js"
     },
+    "./badge": {
+      "types": "./dist/components/Badge/badge.d.ts",
+      "import": "./dist/components/Badge/badge.mjs",
+      "require": "./dist/components/Badge/badge.js"
+    },
+    "./card": {
+      "types": "./dist/components/Card/card.d.ts",
+      "import": "./dist/components/Card/card.mjs",
+      "require": "./dist/components/Card/card.js"
+    },
+    "./fluid-glass": {
+      "types": "./dist/utils/fluidGlass/index.d.ts",
+      "import": "./dist/utils/fluidGlass/index.mjs",
+      "require": "./dist/utils/fluidGlass/index.js"
+    },
+    "./themes/*": "./tokens/theme/*.css",
     "./styles.css": "./dist/styles.css"
   },
   "scripts": {
@@ -68,6 +88,7 @@
     "react-dom": "^18.2.0 || ^19.0.0"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^1.2.1",
     "tailwind-merge": "^1.14.0"

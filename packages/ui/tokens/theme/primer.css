@@ -1,0 +1,69 @@
+/* Skin: Primer (Clean, Solid, Subtle Border) */
+:root,
+[data-skin="primer"] {
+  /* Surface / Background */
+  --ui-surface-base: #ffffff;
+  --ui-surface-hover: #f8fafc;
+  --ui-surface-active: #f1f5f9;
+
+  /* Borders */
+  --ui-border-color: #e2e8f0;
+  --ui-border-width: 1px;
+  --ui-border: var(--ui-border-width) solid var(--ui-border-color);
+
+  /* Glass Effects (Disabled in Primer) */
+  --ui-backdrop-blur: 0px;
+  --ui-backdrop-saturate: 100%;
+
+  /* Shadows & Shapes */
+  --ui-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --ui-shadow-hover: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --ui-radius: 0.5rem; /* 8px */
+
+  /* Text colors */
+  --ui-text-contrast: #0f172a;
+  --ui-text-muted: #64748b;
+
+  /* Button Tokens */
+  --ui-btn-filled-bg: #4f46e5;
+  --ui-btn-filled-hover: #4338ca;
+  --ui-btn-filled-active: #3730a3;
+  --ui-btn-filled-text: #ffffff;
+  --ui-btn-filled-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --ui-btn-outline-bg: transparent;
+  --ui-btn-outline-border: #e2e8f0;
+  --ui-btn-outline-hover: #f1f5f9;
+  --ui-btn-outline-text: #0f172a;
+
+  --ui-btn-ghost-hover: #f1f5f9;
+  --ui-btn-ghost-text: #0f172a;
+
+  /* Badge Tokens */
+  --ui-badge-subtle-bg: #f1f5f9;
+  --ui-badge-subtle-text: #334155;
+  --ui-badge-subtle-border: #e2e8f0;
+}
+
+/* Dark mode for Primer */
+[data-theme="dark"][data-skin="primer"],
+.dark [data-skin="primer"] {
+  --ui-surface-base: #0f172a;
+  --ui-surface-hover: #1e293b;
+  --ui-surface-active: #334155;
+  --ui-border-color: #334155;
+  --ui-text-contrast: #f8fafc;
+  --ui-text-muted: #94a3b8;
+
+  --ui-btn-outline-bg: transparent;
+  --ui-btn-outline-border: #334155;
+  --ui-btn-outline-hover: #1e293b;
+  --ui-btn-outline-text: #f8fafc;
+
+  --ui-btn-ghost-hover: #1e293b;
+  --ui-btn-ghost-text: #f8fafc;
+
+  --ui-badge-subtle-bg: #1e293b;
+  --ui-badge-subtle-text: #94a3b8;
+  --ui-badge-subtle-border: #334155;
+}

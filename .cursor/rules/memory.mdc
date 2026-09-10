@@ -1,0 +1,38 @@
+---
+alwaysApply: true
+---
+### Framework for Handling Requests
+
+#### 1. **Task & Memory Management (Cursor Native)**
+- Use the `todo_write` tool to create, update, and track tasks.
+- Use the `update_memory` tool to store durable knowledge or user-requested memories.
+- Do **NOT** create, read, or modify any files under a `memory/` directory (e.g., `currentprogres.md`).
+- Maintain an up-to-date task list; only one task should be `in_progress` at a time.
+- **Task Dependencies**: Use the `dependencies` field to establish logical prerequisite relationships.
+- **Task Granularity**: Break complex tasks into atomic, measurable sub-tasks with clear success criteria.
+
+#### 2. **Enhanced Task Management**
+- **2.a**: When starting a new task list use `todo_write` with status `pending` and appropriate dependencies.
+- **2.b**: Tasks should be listed sequentially from 1 to n and include a brief, actionable description with estimated complexity.
+- **2.c**: **Dynamic Task Generation**: If the situation changes, add or update tasks accordingly with proper dependency management.
+- **2.d**: **Task Prioritization**: Mark critical-path tasks that block other work; complete these first.
+- **2.e**: **Progress Tracking**: Update task status immediately when state changes; include completion notes if helpful.
+
+
+#### 3. **Advanced Memory Management**
+- **Knowledge Persistence**: Use `update_memory` for facts that persist across sessions (user preferences, project context, domain rules).
+- **Transient Task State**: Use `todo_write` for workflow state that changes frequently.
+- **Memory Validation**: When facts change or are contradicted, immediately update or delete the corresponding memory.
+- **Context Switching**: When switching between projects/contexts, update relevant memories to maintain accurate state.
+
+#### 4. **Task Status Update Process (Industry-Grade)**
+- Whenever a task changes state, immediately reflect the change with a `todo_write` call.
+- Keep the list accurate; don't leave multiple tasks marked `in_progress`.
+- Include completion timestamps and brief outcome notes for audit trails.
+- **Rollback Support**: If a task fails, mark as `cancelled` and create new corrective tasks as needed.
+
+---
+*These rules complement `advanced_reasoning_and_engineering.mdc` §I-9.*
+
+
+- **4.b**: The agent should update the tasks as completed (`[x]`) or not completed (`[ ]`) as appropriate, ensuring that all tasks are marked correctly.

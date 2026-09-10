@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@import "../../packages/ui/tokens/colors.css" layer(theme);
+@import "../../packages/ui/tokens/semantic.css" layer(theme);
+@import "../../packages/ui/tokens/theme/primer.css";
+@import "../../packages/ui/tokens/theme/fluid-glass.css";
+
 @source "../../packages/ui/src/**/*.{ts,tsx,js,jsx}";
-@source "../stories/**/*.{ts,tsx,js,jsx}";
-@source "../.storybook/**/*.{ts,tsx,js,jsx}";
+@source "./stories/**/*.{ts,tsx,js,jsx}";
+@source "./.storybook/**/*.{ts,tsx,js,jsx}";

@@ -1,5 +1,31 @@
-const { dirname, resolve } = require("path");
+const { dirname, resolve, join } = require("path");
+const fs = require("fs");
 const tailwindcss = require("@tailwindcss/postcss");
+
+// Auto-detect all component entries dynamically (Scalable Zero-Config)
+const uiComponentsDir = resolve(__dirname, "../../../packages/ui/src/components");
+const dynamicComponentAliases = fs.existsSync(uiComponentsDir)
+  ? fs
+      .readdirSync(uiComponentsDir, { withFileTypes: true })
+      .filter((dirent) => dirent.isDirectory())
+      .flatMap((dirent) => {
+        const compDir = join(uiComponentsDir, dirent.name);
+        const files = fs.readdirSync(compDir);
+        const mainFile = files.find(
+          (f) =>
+            f.endsWith(".tsx") &&
+            !f.includes(".test.") &&
+            !f.includes(".stories.")
+        );
+        if (!mainFile) return [];
+        return [
+          {
+            find: `@shadoworg/shadowui/${dirent.name.toLowerCase()}`,
+            replacement: join(compDir, mainFile),
+          },
+        ];
+      })
+  : [];
 
 const config = {
   stories: ["../stories/*.stories.tsx", "../stories/**/*.stories.tsx"],
@@ -30,11 +56,23 @@ const config = {
         ...config.resolve,
         alias: [
           ...aliasArray,
-          {
-            find: "ui",
-            replacement: resolve(__dirname, "../../../packages/ui/"),
+          ...dynamicComponentAliases,
+          { 
+            find: "@shadoworg/shadowui",
+            replacement: resolve(__dirname, "../../../packages/ui/src/index.ts"),
           },
         ],
+      },
+      optimizeDeps: {
+        ...config.optimizeDeps,
+        exclude: [...(config.optimizeDeps?.exclude || []), "@shadoworg/shadowui"],
+      },
+      server: {
+        ...config.server,
+        watch: {
+          ...config.server?.watch,
+          ignored: ["!**/packages/ui/**"],
+        },
       },
       css: {
         ...config.css,

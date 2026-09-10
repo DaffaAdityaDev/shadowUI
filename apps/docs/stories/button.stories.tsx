@@ -1,41 +1,199 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "@shadoworg/shadowui/button";
 
-const meta: Meta<typeof Button> = {
+type ButtonStoryArgs = React.ComponentProps<typeof Button> & {
+  skin: "primer" | "fluid-glass";
+};
+
+const meta: Meta<ButtonStoryArgs> = {
+  title: "Components/Button",
   component: Button,
   argTypes: {
-    type: {
-      control: { type: "radio" },
-      options: ["button", "submit", "reset"],
+    skin: {
+      control: { type: "select" },
+      options: ["primer", "fluid-glass"],
+      description: "Pilih theme / skin visual yang aktif",
+      table: {
+        category: "Theme",
+      },
     },
+    variant: {
+      control: { type: "select" },
+      options: ["filled", "outline", "ghost"],
+      description: "Visual variant of the button",
+    },
+    size: {
+      control: { type: "select" },
+      options: ["sm", "md", "lg"],
+      description: "Size of the button",
+    },
+    tone: {
+      control: { type: "select" },
+      options: ["default", "danger"],
+      description: "Color tone / intent",
+    },
+    loading: {
+      control: { type: "boolean" },
+      description: "Shows an animated spinner and disables interaction",
+    },
+    disabled: {
+      control: { type: "boolean" },
+      description: "Disables the button",
+    },
+    children: {
+      control: { type: "text" },
+      description: "Button label / content",
+    },
+  },
+  args: {
+    skin: "primer",
+    children: "Button",
+    variant: "filled",
+    size: "md",
+    tone: "default",
+    loading: false,
+    disabled: false,
   },
 };
 
 export default meta;
 
-type Story = StoryObj<typeof Button>;
+type Story = StoryObj<ButtonStoryArgs>;
 
-/*
- *👇 Render functions are a framework specific feature to allow you control on how the component renders.
- * See https://storybook.js.org/docs/react/api/csf
- * to learn how to use render functions.
- */
-export const Primary: Story = {
-  render: (props) => (
-    <Button
-      {...props}
-      onClick={(): void => {
-        // eslint-disable-next-line no-alert -- alert for demo
-        alert("Hello from Turborepo!");
-      }}
+// 1. Default (Playground): Interactive Controls
+export const Default: Story = {
+  name: "Playground",
+  render: ({ skin = "primer", children, ...props }) => (
+    <div
+      data-skin={skin}
+      className={`p-10 min-h-[200px] flex flex-col items-center justify-center gap-4 rounded-2xl transition-all duration-300 ${
+        skin === "fluid-glass"
+          ? "bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500"
+          : "bg-slate-100"
+      }`}
     >
-      Hello
-    </Button>
+      <Button {...props}>{children}</Button>
+      <span className="text-xs font-mono opacity-60">Active Skin: {skin}</span>
+    </div>
   ),
-  name: "Button",
-  args: {
-    children: "Hello",
-    type: "button",
-    // Remove the style prop - let Tailwind handle it
-  },
+};
+
+// Backward compatibility for old story ID `components-button--primary`
+export const Primary: Story = Default;
+
+// 2. Variants: Visual Comparison (Filled, Outline, Ghost)
+export const Variants: Story = {
+  name: "Variants",
+  render: ({ skin = "primer", tone = "default", size = "md", children, ...props }) => (
+    <div
+      data-skin={skin}
+      className={`p-8 rounded-2xl flex flex-col gap-4 transition-all duration-300 ${
+        skin === "fluid-glass"
+          ? "bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white"
+          : "bg-slate-100"
+      }`}
+    >
+      <span className="text-xs font-mono uppercase tracking-wider font-semibold opacity-70">
+        Variants ({skin}) — Tone: {tone}
+      </span>
+      <div className="flex flex-wrap items-center gap-4">
+        <Button {...props} tone={tone} size={size} variant="filled">
+          {children ? `${children} (Filled)` : "Filled"}
+        </Button>
+        <Button {...props} tone={tone} size={size} variant="outline">
+          {children ? `${children} (Outline)` : "Outline"}
+        </Button>
+        <Button {...props} tone={tone} size={size} variant="ghost">
+          {children ? `${children} (Ghost)` : "Ghost"}
+        </Button>
+      </div>
+    </div>
+  ),
+};
+
+// 3. Sizes: Scale Comparison (sm, md, lg)
+export const Sizes: Story = {
+  name: "Sizes",
+  render: ({ skin = "primer", variant = "filled", tone = "default", children, ...props }) => (
+    <div
+      data-skin={skin}
+      className={`p-8 rounded-2xl flex flex-col gap-4 transition-all duration-300 ${
+        skin === "fluid-glass"
+          ? "bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white"
+          : "bg-slate-100"
+      }`}
+    >
+      <span className="text-xs font-mono uppercase tracking-wider font-semibold opacity-70">
+        Sizes ({skin}) — Variant: {variant}
+      </span>
+      <div className="flex flex-wrap items-center gap-4">
+        <Button {...props} variant={variant} tone={tone} size="sm">
+          {children ? `${children} (sm)` : "Small (sm)"}
+        </Button>
+        <Button {...props} variant={variant} tone={tone} size="md">
+          {children ? `${children} (md)` : "Medium (md)"}
+        </Button>
+        <Button {...props} variant={variant} tone={tone} size="lg">
+          {children ? `${children} (lg)` : "Large (lg)"}
+        </Button>
+      </div>
+    </div>
+  ),
+};
+
+// 4. States: Interaction States (Default, Loading, Disabled)
+export const States: Story = {
+  name: "States",
+  render: ({ skin = "primer", variant = "filled", tone = "default", size = "md", children, ...props }) => (
+    <div
+      data-skin={skin}
+      className={`p-8 rounded-2xl flex flex-col gap-4 transition-all duration-300 ${
+        skin === "fluid-glass"
+          ? "bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white"
+          : "bg-slate-100"
+      }`}
+    >
+      <span className="text-xs font-mono uppercase tracking-wider font-semibold opacity-70">
+        States ({skin}) — Variant: {variant}
+      </span>
+      <div className="flex flex-wrap items-center gap-4">
+        <Button {...props} variant={variant} tone={tone} size={size}>
+          {children || "Normal"}
+        </Button>
+        <Button {...props} variant={variant} tone={tone} size={size} loading>
+          Loading State
+        </Button>
+        <Button {...props} variant={variant} tone={tone} size={size} disabled>
+          Disabled State
+        </Button>
+      </div>
+    </div>
+  ),
+};
+
+// 5. Tones: Intent Comparison (Default vs Danger)
+export const Tones: Story = {
+  name: "Tones",
+  render: ({ skin = "primer", variant = "filled", size = "md", children, ...props }) => (
+    <div
+      data-skin={skin}
+      className={`p-8 rounded-2xl flex flex-col gap-4 transition-all duration-300 ${
+        skin === "fluid-glass"
+          ? "bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white"
+          : "bg-slate-100"
+      }`}
+    >
+      <span className="text-xs font-mono uppercase tracking-wider font-semibold opacity-70">
+        Tones ({skin}) — Variant: {variant}
+      </span>
+      <div className="flex flex-wrap items-center gap-4">
+        <Button {...props} variant={variant} size={size} tone="default">
+          {children ? `${children} (Default)` : "Default Intent"}
+        </Button>
+        <Button {...props} variant={variant} size={size} tone="danger">
+          {children ? `${children} (Danger)` : "Danger Intent"}
+        </Button>
+      </div>
+    </div>
+  ),
 };

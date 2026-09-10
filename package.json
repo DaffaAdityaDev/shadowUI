@@ -3,7 +3,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "dev:frontend": "concurrently -n \"UI,Frontend\" -c \"blue,green\" \"pnpm --filter @shadoworg/shadowui dev\" \"pnpm -C frontend dev\"",
+    "dev:frontend": "concurrently -n \"UI,Frontend\" -c \"blue,green\" \"pnpm --filter @shadoworg/shadowui dev\" \"pnpm --filter frontend dev\"",
     "lint": "turbo run lint",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
