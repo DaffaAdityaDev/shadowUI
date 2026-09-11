@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { Card, Button, Badge, getMaterialNameByIor } from "@shadoworg/shadowui";
 
 export default function TestGlassPage() {
@@ -21,9 +21,7 @@ export default function TestGlassPage() {
 
   // Effective Aberration (Unified or Per-Channel)
   const effectiveAberration =
-    aberrationMode === "linked"
-      ? aberration
-      : { r: aberrationR, g: aberrationG, b: aberrationB };
+    aberrationMode === "linked" ? aberration : { r: aberrationR, g: aberrationG, b: aberrationB };
 
   // Parameter Dimensi Kartu
   const [cardWidth, setCardWidth] = useState(420);
@@ -37,9 +35,11 @@ export default function TestGlassPage() {
 
   // State UI & Demo Content Modes
   const [contentMode, setContentMode] = useState<"music" | "card">("music");
-  const [skin, setSkin] = useState<"fluid-glass" | "primer">("fluid-glass");
+  const [theme, setTheme] = useState<"fluid-glass" | "primer">("fluid-glass");
   const [lensMode, setLensMode] = useState<"full" | "border">("full");
-  const [surface, setSurface] = useState<"convex-squircle" | "convex-circle" | "concave" | "lip">("convex-squircle");
+  const [surface, setSurface] = useState<"convex-squircle" | "convex-circle" | "concave" | "lip">(
+    "convex-squircle",
+  );
   const [showControls, setShowControls] = useState(true);
 
   // Preset Handlers
@@ -72,12 +72,11 @@ export default function TestGlassPage() {
       {/* 1. FLOATING FLUID GLASS DI TENGAH LAYAR */}
       <div className="fixed inset-0 z-30 pointer-events-none flex flex-col items-center justify-center p-4">
         <div className="pointer-events-auto flex flex-col items-center gap-4">
-          
           {contentMode === "music" && (
             /* PRESET 1: MUSIC PLAYER FLUID GLASS WIDGET */
             <Card
-              skin={skin}
-              skinProps={{
+              theme={theme}
+              themeProps={{
                 scale,
                 bezel,
                 ior,
@@ -90,18 +89,20 @@ export default function TestGlassPage() {
                 mode: lensMode,
                 surface,
               }}
-              style={{
-                width: `${cardWidth}px`,
-                minHeight: `${cardHeight}px`,
-                borderRadius: `${radius}px`,
-                ...(skin === "fluid-glass"
-                  ? {
-                      "--ui-backdrop-blur": `${blur}px`,
-                      "--ui-backdrop-saturate": `${saturate}%`,
-                      "--ui-surface-base": `rgba(255, 255, 255, ${opacity / 100})`,
-                    }
-                  : {}),
-              } as React.CSSProperties}
+              style={
+                {
+                  width: `${cardWidth}px`,
+                  minHeight: `${cardHeight}px`,
+                  borderRadius: `${radius}px`,
+                  ...(theme === "fluid-glass"
+                    ? {
+                        "--ui-backdrop-blur": `${blur}px`,
+                        "--ui-backdrop-saturate": `${saturate}%`,
+                        "--ui-surface-base": `rgba(255, 255, 255, ${opacity / 100})`,
+                      }
+                    : {}),
+                } as CSSProperties
+              }
               className="flex flex-col justify-between p-5 select-none cursor-pointer transition-shadow hover:shadow-2xl overflow-hidden"
             >
               <div className="flex items-center gap-3.5">
@@ -114,7 +115,11 @@ export default function TestGlassPage() {
                   />
                 </div>
                 <div className="flex flex-col overflow-hidden">
-                  <Badge variant="subtle" skin={skin} className="w-fit text-[10px] py-0.5 px-2 mb-1">
+                  <Badge
+                    variant="subtle"
+                    theme={theme}
+                    className="w-fit text-[10px] py-0.5 px-2 mb-1"
+                  >
                     Spatial Audio • Master Edition
                   </Badge>
                   <h3 className="font-bold text-base text-white truncate drop-shadow">
@@ -140,9 +145,18 @@ export default function TestGlassPage() {
               {/* Controls Bar */}
               <div className="flex items-center justify-between pt-2 border-t border-white/10">
                 <div className="flex items-center gap-2.5">
-                  <button type="button" className="text-white/80 hover:text-white text-base">⏮</button>
-                  <button type="button" className="w-8 h-8 rounded-full bg-white text-black font-bold flex items-center justify-center hover:scale-105 transition-transform text-xs">▶</button>
-                  <button type="button" className="text-white/80 hover:text-white text-base">⏭</button>
+                  <button type="button" className="text-white/80 hover:text-white text-base">
+                    ⏮
+                  </button>
+                  <button
+                    type="button"
+                    className="w-8 h-8 rounded-full bg-white text-black font-bold flex items-center justify-center hover:scale-105 transition-transform text-xs"
+                  >
+                    ▶
+                  </button>
+                  <button type="button" className="text-white/80 hover:text-white text-base">
+                    ⏭
+                  </button>
                 </div>
                 <span className="font-mono text-[11px] bg-white/15 px-2.5 py-1 rounded-full text-white/80">
                   Lossless Audio
@@ -154,8 +168,8 @@ export default function TestGlassPage() {
           {contentMode === "card" && (
             /* PRESET 2: REGULAR SHADOWUI CARD UI */
             <Card
-              skin={skin}
-              skinProps={{
+              theme={theme}
+              themeProps={{
                 scale,
                 bezel,
                 ior,
@@ -168,24 +182,26 @@ export default function TestGlassPage() {
                 mode: lensMode,
                 surface,
               }}
-              style={{
-                width: `${cardWidth}px`,
-                minHeight: `${cardHeight}px`,
-                borderRadius: `${radius}px`,
-                ...(skin === "fluid-glass"
-                  ? {
-                      "--ui-backdrop-blur": `${blur}px`,
-                      "--ui-backdrop-saturate": `${saturate}%`,
-                      "--ui-surface-base": `rgba(255, 255, 255, ${opacity / 100})`,
-                    }
-                  : {}),
-              } as React.CSSProperties}
+              style={
+                {
+                  width: `${cardWidth}px`,
+                  minHeight: `${cardHeight}px`,
+                  borderRadius: `${radius}px`,
+                  ...(theme === "fluid-glass"
+                    ? {
+                        "--ui-backdrop-blur": `${blur}px`,
+                        "--ui-backdrop-saturate": `${saturate}%`,
+                        "--ui-surface-base": `rgba(255, 255, 255, ${opacity / 100})`,
+                      }
+                    : {}),
+                } as CSSProperties
+              }
               className="flex flex-col justify-between p-5 select-none cursor-pointer transition-shadow hover:shadow-2xl overflow-hidden"
             >
               <div>
                 <div className="flex items-center justify-between">
-                  <Badge variant="subtle" skin={skin} className="text-[10px] font-semibold">
-                    {skin === "fluid-glass" ? `Snell's IOR ${ior.toFixed(2)}` : "Primer Clean"}
+                  <Badge variant="subtle" theme={theme} className="text-[10px] font-semibold">
+                    {theme === "fluid-glass" ? `Snell's IOR ${ior.toFixed(2)}` : "Primer Clean"}
                   </Badge>
                   <span className="text-[11px] font-mono text-white/70">
                     {cardWidth} × {cardHeight}px
@@ -204,7 +220,7 @@ export default function TestGlassPage() {
                   <Button
                     size="sm"
                     variant="filled"
-                    skin={skin}
+                    theme={theme}
                     onClick={() => alert("Button clicked!")}
                     className="h-7 text-xs px-2.5"
                   >
@@ -213,11 +229,11 @@ export default function TestGlassPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    skin={skin}
-                    onClick={() => setSkin(skin === "fluid-glass" ? "primer" : "fluid-glass")}
+                    theme={theme}
+                    onClick={() => setTheme(theme === "fluid-glass" ? "primer" : "fluid-glass")}
                     className="h-7 text-xs px-2.5"
                   >
-                    {skin === "fluid-glass" ? "Primer" : "Glass"}
+                    {theme === "fluid-glass" ? "Primer" : "Glass"}
                   </Button>
                 </div>
                 <div className="flex items-center gap-1 text-[10px] font-mono flex-wrap justify-end">
@@ -225,8 +241,12 @@ export default function TestGlassPage() {
                   <span className="bg-white/20 px-1.5 py-0.5 rounded">Bezel: {bezel}</span>
                   {cardWidth >= 320 && (
                     <>
-                      <span className="bg-pink-500/30 text-pink-200 border border-pink-500/40 px-1.5 py-0.5 rounded">IOR: {ior.toFixed(2)}</span>
-                      <span className="bg-blue-500/30 text-blue-200 border border-blue-500/40 px-1.5 py-0.5 rounded">Thick: {thickness.toFixed(1)}x</span>
+                      <span className="bg-pink-500/30 text-pink-200 border border-pink-500/40 px-1.5 py-0.5 rounded">
+                        IOR: {ior.toFixed(2)}
+                      </span>
+                      <span className="bg-blue-500/30 text-blue-200 border border-blue-500/40 px-1.5 py-0.5 rounded">
+                        Thick: {thickness.toFixed(1)}x
+                      </span>
                     </>
                   )}
                   {specular > 0 && (
@@ -238,7 +258,6 @@ export default function TestGlassPage() {
               </div>
             </Card>
           )}
-
         </div>
       </div>
 
@@ -302,7 +321,10 @@ export default function TestGlassPage() {
                 onClick={() => setLensMode(lensMode === "full" ? "border" : "full")}
                 className="px-3 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-colors text-xs"
               >
-                Lens: <span className="font-bold text-cyan-400">{lensMode === "full" ? "Full" : "Border"}</span>
+                Lens:{" "}
+                <span className="font-bold text-cyan-400">
+                  {lensMode === "full" ? "Full" : "Border"}
+                </span>
               </button>
               {/* 4 Surface Curvature Profiles */}
               <div className="flex bg-white/10 rounded-xl p-0.5 border border-white/10 items-center">
@@ -357,10 +379,10 @@ export default function TestGlassPage() {
               </div>
               <button
                 type="button"
-                onClick={() => setSkin(skin === "fluid-glass" ? "primer" : "fluid-glass")}
+                onClick={() => setTheme(theme === "fluid-glass" ? "primer" : "fluid-glass")}
                 className="px-3 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-colors text-xs"
               >
-                Skin: <span className="font-bold text-pink-400">{skin}</span>
+                Theme: <span className="font-bold text-pink-400">{theme}</span>
               </button>
               <button
                 type="button"
@@ -432,7 +454,13 @@ export default function TestGlassPage() {
                     <span className="flex items-center gap-1.5">
                       <span className="font-semibold text-blue-300">Glass Thickness:</span>
                       <span className="text-[10px] text-blue-400 font-mono">
-                        {thickness < 0.8 ? "Thin" : thickness <= 1.2 ? "Standard" : thickness <= 1.8 ? "Thick" : "Extreme Splay"}
+                        {thickness < 0.8
+                          ? "Thin"
+                          : thickness <= 1.2
+                            ? "Standard"
+                            : thickness <= 1.8
+                              ? "Thick"
+                              : "Extreme Splay"}
                       </span>
                     </span>
                     <span className="text-blue-400 font-mono">{thickness.toFixed(1)}x</span>
@@ -451,7 +479,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setThickness(0.5)}
                       className={`py-0.5 rounded transition-all ${
-                        thickness === 0.5 ? "bg-blue-500 text-white font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        thickness === 0.5
+                          ? "bg-blue-500 text-white font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       0.5x Thin
@@ -460,7 +490,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setThickness(1.0)}
                       className={`py-0.5 rounded transition-all ${
-                        thickness === 1.0 ? "bg-blue-500 text-white font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        thickness === 1.0
+                          ? "bg-blue-500 text-white font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       1.0x Std
@@ -469,7 +501,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setThickness(1.6)}
                       className={`py-0.5 rounded transition-all ${
-                        thickness === 1.6 ? "bg-blue-500 text-white font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        thickness === 1.6
+                          ? "bg-blue-500 text-white font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       1.6x Deep
@@ -478,7 +512,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setThickness(2.2)}
                       className={`py-0.5 rounded transition-all ${
-                        thickness === 2.2 ? "bg-blue-500 text-white font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        thickness === 2.2
+                          ? "bg-blue-500 text-white font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       2.2x Splay
@@ -519,7 +555,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setIor(1.0)}
                       className={`py-0.5 rounded transition-all ${
-                        ior === 1.0 ? "bg-pink-500 text-white font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        ior === 1.0
+                          ? "bg-pink-500 text-white font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       1.00 Air
@@ -528,7 +566,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setIor(1.33)}
                       className={`py-0.5 rounded transition-all ${
-                        ior === 1.33 ? "bg-pink-500 text-white font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        ior === 1.33
+                          ? "bg-pink-500 text-white font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       1.33 H₂O
@@ -537,7 +577,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setIor(1.52)}
                       className={`py-0.5 rounded transition-all ${
-                        ior === 1.52 ? "bg-pink-500 text-white font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        ior === 1.52
+                          ? "bg-pink-500 text-white font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       1.52 Glass
@@ -546,7 +588,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setIor(1.8)}
                       className={`py-0.5 rounded transition-all ${
-                        ior === 1.8 ? "bg-pink-500 text-white font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        ior === 1.8
+                          ? "bg-pink-500 text-white font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       1.80 Cryst
@@ -555,7 +599,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setIor(2.42)}
                       className={`py-0.5 rounded transition-all ${
-                        ior === 2.42 ? "bg-pink-500 text-white font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        ior === 2.42
+                          ? "bg-pink-500 text-white font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       2.42 Dia
@@ -570,7 +616,13 @@ export default function TestGlassPage() {
                       <span>Chromatic Aberration:</span>
                       <span className="text-[10px] text-purple-400 font-mono">
                         {aberrationMode === "linked"
-                          ? (aberration === 0 ? "Off" : aberration < 6 ? "Subtle" : aberration < 14 ? "Vivid" : "Prism")
+                          ? aberration === 0
+                            ? "Off"
+                            : aberration < 6
+                              ? "Subtle"
+                              : aberration < 14
+                                ? "Vivid"
+                                : "Prism"
                           : "RGB Tuning"}
                       </span>
                     </span>
@@ -628,7 +680,9 @@ export default function TestGlassPage() {
                           type="button"
                           onClick={() => setAberration(0)}
                           className={`py-0.5 rounded transition-all ${
-                            aberration === 0 ? "bg-purple-500 text-white font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                            aberration === 0
+                              ? "bg-purple-500 text-white font-bold"
+                              : "bg-white/10 hover:bg-white/20 text-slate-300"
                           }`}
                         >
                           0 Off
@@ -637,7 +691,9 @@ export default function TestGlassPage() {
                           type="button"
                           onClick={() => setAberration(4)}
                           className={`py-0.5 rounded transition-all ${
-                            aberration === 4 ? "bg-purple-500 text-white font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                            aberration === 4
+                              ? "bg-purple-500 text-white font-bold"
+                              : "bg-white/10 hover:bg-white/20 text-slate-300"
                           }`}
                         >
                           4 Subtle
@@ -646,7 +702,9 @@ export default function TestGlassPage() {
                           type="button"
                           onClick={() => setAberration(10)}
                           className={`py-0.5 rounded transition-all ${
-                            aberration === 10 ? "bg-purple-500 text-white font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                            aberration === 10
+                              ? "bg-purple-500 text-white font-bold"
+                              : "bg-white/10 hover:bg-white/20 text-slate-300"
                           }`}
                         >
                           10 Vivid
@@ -655,7 +713,9 @@ export default function TestGlassPage() {
                           type="button"
                           onClick={() => setAberration(18)}
                           className={`py-0.5 rounded transition-all ${
-                            aberration === 18 ? "bg-purple-500 text-white font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                            aberration === 18
+                              ? "bg-purple-500 text-white font-bold"
+                              : "bg-white/10 hover:bg-white/20 text-slate-300"
                           }`}
                         >
                           18 Prism
@@ -716,7 +776,11 @@ export default function TestGlassPage() {
                       <div className="grid grid-cols-4 gap-1 mt-0.5 text-[9px] font-mono text-center">
                         <button
                           type="button"
-                          onClick={() => { setAberrationR(-5); setAberrationG(0); setAberrationB(7); }}
+                          onClick={() => {
+                            setAberrationR(-5);
+                            setAberrationG(0);
+                            setAberrationB(7);
+                          }}
                           className="py-0.5 rounded bg-white/10 hover:bg-white/20 text-slate-300 transition-all"
                           title="Classic Prism: R:-5 G:0 B:+7"
                         >
@@ -724,7 +788,11 @@ export default function TestGlassPage() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => { setAberrationR(-8); setAberrationG(0); setAberrationB(0); }}
+                          onClick={() => {
+                            setAberrationR(-8);
+                            setAberrationG(0);
+                            setAberrationB(0);
+                          }}
                           className="py-0.5 rounded bg-white/10 hover:bg-white/20 text-slate-300 transition-all"
                           title="Cyan-Red: R:-8 G:0 B:0"
                         >
@@ -732,7 +800,11 @@ export default function TestGlassPage() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => { setAberrationR(0); setAberrationG(0); setAberrationB(10); }}
+                          onClick={() => {
+                            setAberrationR(0);
+                            setAberrationG(0);
+                            setAberrationB(10);
+                          }}
                           className="py-0.5 rounded bg-white/10 hover:bg-white/20 text-slate-300 transition-all"
                           title="Blue Rim: R:0 G:0 B:+10"
                         >
@@ -740,7 +812,11 @@ export default function TestGlassPage() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => { setAberrationR(8); setAberrationG(0); setAberrationB(-4); }}
+                          onClick={() => {
+                            setAberrationR(8);
+                            setAberrationG(0);
+                            setAberrationB(-4);
+                          }}
                           className="py-0.5 rounded bg-white/10 hover:bg-white/20 text-slate-300 transition-all"
                           title="Warm Red: R:+8 G:0 B:-4"
                         >
@@ -924,7 +1000,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setSpecular(0)}
                       className={`py-0.5 rounded transition-all ${
-                        specular === 0 ? "bg-amber-500 text-black font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        specular === 0
+                          ? "bg-amber-500 text-black font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       0% Off
@@ -933,7 +1011,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setSpecular(0.4)}
                       className={`py-0.5 rounded transition-all ${
-                        specular === 0.4 ? "bg-amber-500 text-black font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        specular === 0.4
+                          ? "bg-amber-500 text-black font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       40% Sub
@@ -942,7 +1022,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setSpecular(0.75)}
                       className={`py-0.5 rounded transition-all ${
-                        specular === 0.75 ? "bg-amber-500 text-black font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        specular === 0.75
+                          ? "bg-amber-500 text-black font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       75% App
@@ -951,7 +1033,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setSpecular(1.0)}
                       className={`py-0.5 rounded transition-all ${
-                        specular === 1.0 ? "bg-amber-500 text-black font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        specular === 1.0
+                          ? "bg-amber-500 text-black font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       100% Dia
@@ -965,7 +1049,11 @@ export default function TestGlassPage() {
                     <span className="flex items-center gap-1.5">
                       <span>Border Rim Width:</span>
                       <span className="text-[10px] text-amber-300 font-mono">
-                        {rimWidth <= 3 ? "Thin Crisp" : rimWidth <= 5 ? "Glass Rim" : "Wide Chamfer"}
+                        {rimWidth <= 3
+                          ? "Thin Crisp"
+                          : rimWidth <= 5
+                            ? "Glass Rim"
+                            : "Wide Chamfer"}
                       </span>
                     </span>
                     <span className="text-amber-400 font-mono">{rimWidth}px</span>
@@ -984,7 +1072,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setRimWidth(2)}
                       className={`py-0.5 rounded transition-all ${
-                        rimWidth === 2 ? "bg-amber-500 text-black font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        rimWidth === 2
+                          ? "bg-amber-500 text-black font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       2px Sharp
@@ -993,7 +1083,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setRimWidth(4)}
                       className={`py-0.5 rounded transition-all ${
-                        rimWidth === 4 ? "bg-amber-500 text-black font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        rimWidth === 4
+                          ? "bg-amber-500 text-black font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       4px Std
@@ -1002,7 +1094,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setRimWidth(6)}
                       className={`py-0.5 rounded transition-all ${
-                        rimWidth === 6 ? "bg-amber-500 text-black font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        rimWidth === 6
+                          ? "bg-amber-500 text-black font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       6px Soft
@@ -1011,7 +1105,9 @@ export default function TestGlassPage() {
                       type="button"
                       onClick={() => setRimWidth(8)}
                       className={`py-0.5 rounded transition-all ${
-                        rimWidth === 8 ? "bg-amber-500 text-black font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        rimWidth === 8
+                          ? "bg-amber-500 text-black font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       8px Wide
@@ -1024,7 +1120,9 @@ export default function TestGlassPage() {
                   <div className="flex flex-col">
                     <span className="font-semibold text-white flex items-center gap-1.5 text-[11px]">
                       <span>Mouse Tracking</span>
-                      {interactiveLight && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />}
+                      {interactiveLight && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                      )}
                     </span>
                     <span className="text-[9px] text-slate-400">Kilau ikut arah kursor</span>
                   </div>
@@ -1042,12 +1140,20 @@ export default function TestGlassPage() {
                 </div>
 
                 {/* Slider: Light Source Angle */}
-                <div className={`flex flex-col gap-1.5 pt-1.5 border-t border-white/10 transition-opacity ${interactiveLight ? "opacity-50" : "opacity-100"}`}>
+                <div
+                  className={`flex flex-col gap-1.5 pt-1.5 border-t border-white/10 transition-opacity ${interactiveLight ? "opacity-50" : "opacity-100"}`}
+                >
                   <div className="flex justify-between items-center text-slate-300">
                     <span className="flex items-center gap-1">
                       <span>Angle (Static):</span>
                       <span className="text-[10px] text-amber-400 font-mono">
-                        {lightAngle >= 315 || lightAngle < 45 ? "↖ NW" : lightAngle < 135 ? "↗ NE" : lightAngle < 225 ? "↘ SE" : "↙ SW"}
+                        {lightAngle >= 315 || lightAngle < 45
+                          ? "↖ NW"
+                          : lightAngle < 135
+                            ? "↗ NE"
+                            : lightAngle < 225
+                              ? "↘ SE"
+                              : "↙ SW"}
                       </span>
                     </span>
                     <span className="text-amber-400 font-mono">{lightAngle}°</span>
@@ -1068,7 +1174,9 @@ export default function TestGlassPage() {
                       disabled={interactiveLight}
                       onClick={() => setLightAngle(315)}
                       className={`py-0.5 rounded transition-all disabled:opacity-50 ${
-                        lightAngle === 315 ? "bg-amber-500 text-black font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        lightAngle === 315
+                          ? "bg-amber-500 text-black font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       ↖ 315°
@@ -1078,7 +1186,9 @@ export default function TestGlassPage() {
                       disabled={interactiveLight}
                       onClick={() => setLightAngle(45)}
                       className={`py-0.5 rounded transition-all disabled:opacity-50 ${
-                        lightAngle === 45 ? "bg-amber-500 text-black font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        lightAngle === 45
+                          ? "bg-amber-500 text-black font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       ↗ 45°
@@ -1088,7 +1198,9 @@ export default function TestGlassPage() {
                       disabled={interactiveLight}
                       onClick={() => setLightAngle(135)}
                       className={`py-0.5 rounded transition-all disabled:opacity-50 ${
-                        lightAngle === 135 ? "bg-amber-500 text-black font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        lightAngle === 135
+                          ? "bg-amber-500 text-black font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       ↘ 135°
@@ -1098,7 +1210,9 @@ export default function TestGlassPage() {
                       disabled={interactiveLight}
                       onClick={() => setLightAngle(225)}
                       className={`py-0.5 rounded transition-all disabled:opacity-50 ${
-                        lightAngle === 225 ? "bg-amber-500 text-black font-bold" : "bg-white/10 hover:bg-white/20 text-slate-300"
+                        lightAngle === 225
+                          ? "bg-amber-500 text-black font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-slate-300"
                       }`}
                     >
                       ↙ 225°
@@ -1122,7 +1236,9 @@ export default function TestGlassPage() {
             Native Fluid Glass in Card Component
           </h1>
           <p className="text-slate-400 text-lg max-w-xl">
-            Scroll ke bawah perlahan. Perhatikan bagaimana gambar dan garis melengkung secara fisik di pinggiran kartu <code className="text-pink-400">&lt;Card skin=&quot;fluid-glass&quot;&gt;</code>.
+            Scroll ke bawah perlahan. Perhatikan bagaimana gambar dan garis melengkung secara fisik
+            di pinggiran kartu{" "}
+            <code className="text-pink-400">&lt;Card theme=&quot;fluid-glass&quot;&gt;</code>.
           </p>
           <div className="flex items-center gap-2 text-slate-500 text-sm mt-4 animate-bounce">
             <span>↓ Scroll down to view behind the glass</span>
@@ -1165,7 +1281,8 @@ export default function TestGlassPage() {
               GEOMETRIC LINES
             </h3>
             <p className="text-sm text-slate-300 max-w-md bg-black/60 backdrop-blur-sm p-4 rounded-xl border border-white/10">
-              Garis-garis diagonal ini tampak melengkung tajam (*distorted*) saat bersinggungan dengan bezel kartu.
+              Garis-garis diagonal ini tampak melengkung tajam (*distorted*) saat bersinggungan
+              dengan bezel kartu.
             </p>
           </div>
         </section>
@@ -1176,7 +1293,7 @@ export default function TestGlassPage() {
             LIGHT BENDING
           </div>
           <div className="text-6xl md:text-8xl font-black uppercase text-indigo-500/30 tracking-tighter leading-none pl-12">
-            SNELL'S LAW
+            SNELL&apos;S LAW
           </div>
           <div className="text-6xl md:text-8xl font-black uppercase text-pink-500/30 tracking-tighter leading-none">
             OPTICAL REFRACTION
@@ -1222,7 +1339,9 @@ export default function TestGlassPage() {
           <div className="relative z-10 bg-slate-900/90 border border-white/20 p-8 rounded-2xl text-center max-w-lg">
             <h4 className="text-2xl font-bold text-white">Checkerboard Grid Test</h4>
             <p className="text-sm text-slate-400 mt-2">
-              Bandingkan distorsi saat <code className="text-pink-400">skin=&quot;fluid-glass&quot;</code> aktif vs <code className="text-indigo-400">skin=&quot;primer&quot;</code> biasa.
+              Bandingkan distorsi saat{" "}
+              <code className="text-pink-400">theme=&quot;fluid-glass&quot;</code> aktif vs{" "}
+              <code className="text-indigo-400">theme=&quot;primer&quot;</code> biasa.
             </p>
           </div>
         </section>

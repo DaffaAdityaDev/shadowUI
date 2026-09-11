@@ -1,6 +1,6 @@
-/* Skin: Primer (Clean, Solid, Subtle Border) */
+/* Theme: Primer (Clean, Solid, Subtle Border) */
 :root,
-[data-skin="primer"] {
+[data-theme="primer"] {
   /* Surface / Background */
   --ui-surface-base: #ffffff;
   --ui-surface-hover: #f8fafc;
@@ -46,8 +46,8 @@
 }
 
 /* Dark mode for Primer */
-[data-theme="dark"][data-skin="primer"],
-.dark [data-skin="primer"] {
+[data-theme="dark"][data-theme="primer"],
+.dark [data-theme="primer"] {
   --ui-surface-base: #0f172a;
   --ui-surface-hover: #1e293b;
   --ui-surface-active: #334155;

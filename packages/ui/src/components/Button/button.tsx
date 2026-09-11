@@ -1,114 +1,28 @@
-import * as React from "react";
+// packages/ui/src/components/Button/button.tsx
+import { forwardRef } from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../utils/cn";
+import { buttonVariants } from "./button.variants";
+import type { ButtonProps } from "./button.types";
 
-export const buttonVariants = cva(
-  [
-    "inline-flex items-center justify-center gap-2 font-medium transition-all duration-150 select-none cursor-pointer",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2",
-    "disabled:pointer-events-none disabled:opacity-50",
-    "[border-radius:var(--ui-radius)]",
-    "[backdrop-filter:blur(var(--ui-backdrop-blur))_saturate(var(--ui-backdrop-saturate))]",
-    "[-webkit-backdrop-filter:blur(var(--ui-backdrop-blur))_saturate(var(--ui-backdrop-saturate))]",
-  ],
-  {
-    variants: {
-      variant: {
-        filled: [
-          "[box-shadow:var(--ui-btn-filled-shadow)]",
-          "hover:opacity-95 hover:-translate-y-0.5",
-          "active:translate-y-0",
-        ],
-        outline: [
-          "border",
-          "hover:-translate-y-0.5",
-          "active:translate-y-0",
-        ],
-        ghost: [
-          "bg-transparent",
-          "active:scale-95",
-        ],
-      },
-      size: {
-        sm: "h-8 px-3 text-sm",
-        md: "h-10 px-4 text-base",
-        lg: "h-12 px-6 text-lg",
-      },
-      tone: {
-        default: "",
-        danger: "",
-      },
-    },
-    compoundVariants: [
-      // filled
-      {
-        variant: "filled",
-        tone: "default",
-        class:
-          "[background:var(--ui-btn-filled-bg)] text-[var(--ui-btn-filled-text)]",
-      },
-      {
-        variant: "filled",
-        tone: "danger",
-        class:
-          "bg-red-600 hover:bg-red-700 active:bg-red-800 text-white focus-visible:ring-red-500",
-      },
-      // outline
-      {
-        variant: "outline",
-        tone: "default",
-        class:
-          "[background:var(--ui-btn-outline-bg)] [border-color:var(--ui-btn-outline-border)] text-[var(--ui-btn-outline-text)] hover:[background:var(--ui-btn-outline-hover)]",
-      },
-      {
-        variant: "outline",
-        tone: "danger",
-        class:
-          "border-red-500 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 focus-visible:ring-red-500",
-      },
-      // ghost
-      {
-        variant: "ghost",
-        tone: "default",
-        class:
-          "text-[var(--ui-btn-ghost-text)] hover:[background:var(--ui-btn-ghost-hover)]",
-      },
-      {
-        variant: "ghost",
-        tone: "danger",
-        class:
-          "text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 focus-visible:ring-red-500",
-      },
-    ],
-    defaultVariants: {
-      variant: "filled",
-      size: "md",
-      tone: "default",
-    },
-  }
-);
+export { buttonVariants, type ButtonVariants } from "./button.variants";
+export type { ButtonProps, ButtonTheme } from "./button.types";
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-  loading?: boolean;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
-  skin?: "primer" | "fluid-glass";
-  "data-skin"?: string;
-}
-
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+/**
+ * Button Component.
+ *
+ * Supports Slot polymorphism (asChild), loading state, icons, and semantic styling
+ * connected to theme CSS tokens.
+ */
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       className,
       variant,
       size,
       tone,
-      skin,
-      "data-skin": dataSkin,
+      theme,
+      "data-theme": dataTheme,
       asChild = false,
       loading = false,
       leftIcon,
@@ -117,15 +31,16 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       ...rest
     },
-    ref
+    ref,
   ) => {
     const Comp = asChild ? Slot : "button";
     const isDisabled = disabled || loading;
+    const resolvedTheme = theme ?? dataTheme;
 
     return (
       <Comp
         ref={ref}
-        data-skin={skin ?? dataSkin}
+        data-theme={resolvedTheme}
         className={cn(buttonVariants({ variant, size, tone }), className)}
         disabled={isDisabled}
         aria-disabled={isDisabled}
@@ -160,7 +75,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {!loading && rightIcon}
       </Comp>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

@@ -33,7 +33,7 @@ export function hasChromaticAberration(aberration?: ChromaticAberration): boolea
  */
 export function calculateChromaticScales(
   scale: number,
-  aberration: ChromaticAberration = 0
+  aberration: ChromaticAberration = 0,
 ): ChromaticScales {
   if (typeof aberration === "number") {
     return {
@@ -67,7 +67,7 @@ export function buildChromaticAberrationFilterContent(
   width: number,
   height: number,
   scale: number,
-  aberration: ChromaticAberration
+  aberration: ChromaticAberration,
 ): string {
   const { scaleRed, scaleGreen, scaleBlue } = calculateChromaticScales(scale, aberration);
 

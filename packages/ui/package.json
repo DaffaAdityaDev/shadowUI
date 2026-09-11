@@ -1,32 +1,32 @@
 {
   "name": "@shadoworg/shadowui",
   "version": "0.0.4",
-  "sideEffects": [
-    "dist/styles.css"
-  ],
-  "style": "dist/styles.css",
-  "license": "MIT",
   "description": "SHADOWUI - A modern React component library",
   "keywords": [
-    "react",
     "components",
-    "ui",
     "design-system",
-    "tailwind"
+    "react",
+    "tailwind",
+    "ui"
   ],
+  "homepage": "https://github.com/DaffaAdityaDev/shadowUI",
+  "bugs": {
+    "url": "https://github.com/DaffaAdityaDev/shadowUI/issues"
+  },
+  "license": "MIT",
   "author": "Daffa Aditya <daffaaditya.me@gmail.com>",
   "repository": {
     "type": "git",
     "url": "https://github.com/DaffaAdityaDev/shadowUI"
   },
-  "homepage": "https://github.com/DaffaAdityaDev/shadowUI",
-  "bugs": {
-    "url": "https://github.com/DaffaAdityaDev/shadowUI/issues"
-  },
+  "style": "dist/styles.css",
   "files": [
     "dist",
     "tokens",
     "README.md"
+  ],
+  "sideEffects": [
+    "dist/styles.css"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -60,6 +60,9 @@
     "./themes/*": "./tokens/theme/*.css",
     "./styles.css": "./dist/styles.css"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -69,6 +72,12 @@
     "version:patch": "npm version patch --no-git-tag-version",
     "pack": "npm pack",
     "publish:script": "pnpm build && npm publish --access public"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^1.2.1",
+    "tailwind-merge": "^1.14.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -86,14 +95,5 @@
   "peerDependencies": {
     "react": "^18.2.0 || ^19.0.0",
     "react-dom": "^18.2.0 || ^19.0.0"
-  },
-  "dependencies": {
-    "@radix-ui/react-slot": "^1.1.0",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^1.2.1",
-    "tailwind-merge": "^1.14.0"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

@@ -1,26 +1,36 @@
 {
+  "name": "design-system",
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
-    "dev:frontend": "concurrently -n \"UI,Frontend\" -c \"blue,green\" \"pnpm --filter @shadoworg/shadowui dev\" \"pnpm --filter frontend dev\"",
-    "lint": "turbo run lint",
+    "dev": "turbo run dev --parallel",
+    "dev:docs": "pnpm --filter docs dev",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:ui": "pnpm --filter @shadoworg/shadowui dev",
+    "lint": "oxlint",
+    "lint:eslint": "turbo run lint",
     "clean": "turbo run clean && rm -rf node_modules",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "format:prettier": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "turbo run build --filter=docs^... && changeset publish",
     "preview-storybook": "turbo run preview-storybook",
-    "publish:ui": "pnpm --filter @shadoworg/shadowui run publish:script"
+    "publish:ui": "pnpm --filter @shadoworg/shadowui run publish:script",
+    "prepare": "lefthook install"
+  },
+  "dependencies": {
+    "concurrently": "^9.2.1"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
+    "@oxlint/plugins": "^1.82.0",
+    "lefthook": "^2.1.12",
+    "oxfmt": "^0.67.0",
+    "oxlint": "^1.82.0",
     "prettier": "^3.2.5",
     "turbo": "^2.6.1"
   },
-  "packageManager": "pnpm@10.22.0",
-  "name": "design-system",
-  "dependencies": {
-    "concurrently": "^9.2.1"
-  }
+  "packageManager": "pnpm@10.22.0"
 }

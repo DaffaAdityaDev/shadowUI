@@ -1,35 +1,19 @@
-import * as React from "react";
-import type {
-  ChromaticAberration,
-  FluidGlassOptions,
-  FluidGlassMode,
-  FluidGlassSurface,
-} from "../../utils/fluidGlass/types";
+// packages/ui/src/hooks/themes/useFluidGlassTheme.ts
+import { useEffect, type RefObject } from "react";
+import type { FluidGlassMode, FluidGlassSurface } from "../../utils/fluidGlass/types";
+import type { FluidGlassThemeOptions } from "./useFluidGlassTheme.types";
 
-export interface FluidGlassSkinOptions extends FluidGlassOptions {
-  fluidBezel?: number;
-  fluidScale?: number;
-  fluidIor?: number;
-  fluidThickness?: number;
-  fluidRimWidth?: number;
-  fluidAberration?: ChromaticAberration;
-  fluidSpecular?: number;
-  fluidLightAngle?: number;
-  fluidInteractiveLight?: boolean;
-  fluidMode?: FluidGlassMode;
-  fluidSurface?: FluidGlassSurface;
-  [key: string]: any;
-}
+export type { FluidGlassThemeOptions };
 
 /**
  * Dedicated Custom Hook for the "fluid-glass" Theme.
  * All logic, parameter normalization, and optical physics side-effects are isolated here,
  * without cluttering UI components or other theme hooks.
  */
-export function useFluidGlassSkin<T extends HTMLElement = HTMLDivElement>(
-  elementRef: React.RefObject<T | null>,
-  options?: FluidGlassSkinOptions,
-  enabled: boolean = true
+export function useFluidGlassTheme<T extends HTMLElement = HTMLDivElement>(
+  elementRef: RefObject<T | null>,
+  options?: FluidGlassThemeOptions,
+  enabled: boolean = true,
 ): void {
   const rawAberration = options?.aberration ?? options?.fluidAberration ?? 0;
   const aberrationKey =
@@ -37,12 +21,11 @@ export function useFluidGlassSkin<T extends HTMLElement = HTMLDivElement>(
       ? `${rawAberration.r ?? rawAberration.red ?? 0}_${rawAberration.g ?? rawAberration.green ?? 0}_${rawAberration.b ?? rawAberration.blue ?? 0}`
       : String(rawAberration);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!enabled || typeof window === "undefined") return;
 
     const isChromium =
-      typeof (window as any).chrome !== "undefined" ||
-      navigator.userAgent.indexOf("Chrome") !== -1;
+      typeof (window as any).chrome !== "undefined" || navigator.userAgent.indexOf("Chrome") !== -1;
 
     if (!isChromium) return;
 
@@ -57,16 +40,33 @@ export function useFluidGlassSkin<T extends HTMLElement = HTMLDivElement>(
 
     // Normalize parameters specific to Fluid Glass
     const bezel = options?.bezel ?? options?.fluidBezel;
-    const scale = options?.scale ?? options?.fluidScale ?? 28;
-    const ior = options?.ior ?? options?.fluidIor ?? 1.52;
-    const thickness = options?.thickness ?? options?.fluidThickness ?? 1.0;
+    const scale = options?.scale ?? options?.fluidScale ?? 36;
+    const ior = options?.ior ?? options?.fluidIor ?? 2.5;
+    const thickness = options?.thickness ?? options?.fluidThickness ?? 1.2;
     const rimWidth = options?.rimWidth ?? options?.fluidRimWidth ?? 4;
     const aberration = options?.aberration ?? options?.fluidAberration ?? 0;
-    const specular = options?.specular ?? options?.fluidSpecular ?? 0;
+    const specular = options?.specular ?? options?.fluidSpecular ?? 0.85;
     const lightAngle = options?.lightAngle ?? options?.fluidLightAngle ?? 225;
-    const interactiveLight = options?.interactiveLight ?? options?.fluidInteractiveLight ?? false;
-    const mode: FluidGlassMode = options?.mode ?? options?.fluidMode ?? "border";
-    const surface: FluidGlassSurface = options?.surface ?? options?.fluidSurface ?? "convex-squircle";
+    const interactiveLight = options?.interactiveLight ?? options?.fluidInteractiveLight ?? true;
+    const mode: FluidGlassMode = options?.mode ?? options?.fluidMode ?? "full";
+    const surface: FluidGlassSurface =
+      options?.surface ?? options?.fluidSurface ?? "convex-squircle";
+
+    // 0. Optical Material Clarity (Blur, Opacity, Saturation overrides)
+    const blur = options?.blur ?? options?.fluidBlur;
+    const opacity = options?.opacity ?? options?.fluidOpacity;
+    const saturate = options?.saturate ?? options?.fluidSaturate;
+
+    if (blur !== undefined) {
+      el.style.setProperty("--ui-backdrop-blur", `${blur}px`);
+    }
+    if (opacity !== undefined) {
+      const alpha = opacity <= 1 ? opacity : opacity / 100;
+      el.style.setProperty("--ui-surface-base", `rgba(255, 255, 255, ${alpha})`);
+    }
+    if (saturate !== undefined) {
+      el.style.setProperty("--ui-backdrop-saturate", `${saturate}%`);
+    }
 
     // Dynamically lazy-load Fluid Glass physics engine (0 byte overhead for non-fluid users)
     import("../../utils/fluidGlass").then(
@@ -147,13 +147,19 @@ export function useFluidGlassSkin<T extends HTMLElement = HTMLDivElement>(
 
           if (rafId) cancelAnimationFrame(rafId);
           rafId = requestAnimationFrame(() => {
-            const specularUrl = generateSpecularMap(rect.width, rect.height, lastBezel, lastRadius, {
-              intensity: specular,
-              thickness,
-              rimWidth,
-              lightAngle: deg,
-              mode,
-            });
+            const specularUrl = generateSpecularMap(
+              rect.width,
+              rect.height,
+              lastBezel,
+              lastRadius,
+              {
+                intensity: specular,
+                thickness,
+                rimWidth,
+                lightAngle: deg,
+                mode,
+              },
+            );
             if (specularUrl && elementRef?.current) {
               elementRef.current.style.setProperty("--ui-fluid-specular", `url("${specularUrl}")`);
             }
@@ -172,7 +178,7 @@ export function useFluidGlassSkin<T extends HTMLElement = HTMLDivElement>(
 
         ro = new ResizeObserver(() => updateFilter());
         ro.observe(currentEl);
-      }
+      },
     );
 
     return () => {
@@ -184,8 +190,12 @@ export function useFluidGlassSkin<T extends HTMLElement = HTMLDivElement>(
       if (el) {
         el.style.removeProperty("--ui-fluid-filter");
         el.style.removeProperty("--ui-fluid-specular");
+        if (blur !== undefined) el.style.removeProperty("--ui-backdrop-blur");
+        if (opacity !== undefined) el.style.removeProperty("--ui-surface-base");
+        if (saturate !== undefined) el.style.removeProperty("--ui-backdrop-saturate");
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     enabled,
     elementRef,
@@ -211,5 +221,11 @@ export function useFluidGlassSkin<T extends HTMLElement = HTMLDivElement>(
     options?.fluidMode,
     options?.surface,
     options?.fluidSurface,
+    options?.blur,
+    options?.fluidBlur,
+    options?.opacity,
+    options?.fluidOpacity,
+    options?.saturate,
+    options?.fluidSaturate,
   ]);
 }

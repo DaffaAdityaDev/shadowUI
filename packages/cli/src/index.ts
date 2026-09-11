@@ -19,7 +19,9 @@ program
   .action(() => {
     console.log(pc.bold(pc.cyan("\nAvailable ShadowUI Components:\n")));
     Object.values(TEMPLATES).forEach((tmpl) => {
-      console.log(`  ${pc.green("✔")} ${pc.bold(tmpl.name.padEnd(12))} - ${pc.dim(tmpl.description)}`);
+      console.log(
+        `  ${pc.green("✔")} ${pc.bold(tmpl.name.padEnd(12))} - ${pc.dim(tmpl.description)}`,
+      );
     });
     console.log("\nUse " + pc.cyan("npx shadowui add <component>") + " to install.\n");
   });
@@ -41,7 +43,7 @@ program
       {
         type: "select",
         name: "theme",
-        message: "Which default skin do you want to use?",
+        message: "Which default theme do you want to use?",
         choices: [
           { title: "Fluid Glass (Optical Refraction & Caustics)", value: "fluid-glass" },
           { title: "Primer (Clean Minimalist Solid)", value: "primer" },
@@ -66,7 +68,7 @@ program
     const config = {
       $schema: "https://shadowui.dev/schema.json",
       componentDir: response.componentDir,
-      defaultSkin: response.theme,
+      defaultTheme: response.theme,
     };
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2), "utf-8");
 
@@ -158,8 +160,14 @@ program
       console.log(`  ${pc.green("✔")} Created ${pc.bold(path.join(targetDirName, tmpl.filename))}`);
     }
 
-    console.log(pc.bold(pc.green("\n✨ Component(s) ready! You have full control to edit the JSX and styles.")));
-    console.log(pc.dim("Ensure @shadoworg/shadowui is installed for the fluid-glass physics engine.\n"));
+    console.log(
+      pc.bold(
+        pc.green("\n✨ Component(s) ready! You have full control to edit the JSX and styles."),
+      ),
+    );
+    console.log(
+      pc.dim("Ensure @shadoworg/shadowui is installed for the fluid-glass physics engine.\n"),
+    );
   });
 
 program.parse(process.argv);

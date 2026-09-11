@@ -1,0 +1,14 @@
+# Lefthook Git Hooks configuration for ShadowUI
+# Ultra-fast pre-commit hooks powered by Oxlint and Oxfmt
+
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.{ts,tsx,js,jsx,mjs,cjs}"
+      run: npx oxlint {staged_files}
+
+    format:
+      glob: "*.{ts,tsx,js,jsx,mjs,cjs,json,css,md}"
+      run: npx oxfmt {staged_files}
+      stage_fixed: true

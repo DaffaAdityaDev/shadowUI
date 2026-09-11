@@ -1,6 +1,5 @@
 @import "tailwindcss";
-/* @source "../node_modules/@shadoworg/shadowui/dist*.{js,mjs}"; */
-/* @import "@shadoworg/shadowui/dist/styles.css"; */
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
 
 /* :root {
   --background: #ffffff;
@@ -36,8 +35,8 @@ body {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 
+  box-shadow:
     0 20px 40px rgba(0, 0, 0, 0.2),
-    inset 0 1px 2px rgba(255, 255, 255, 0.8),   /* Specular highlight atas */
-    inset 0 -1px 2px rgba(255, 255, 255, 0.2);  /* Rim light bawah */
+    inset 0 1px 2px rgba(255, 255, 255, 0.8),
+    /* Specular highlight atas */ inset 0 -1px 2px rgba(255, 255, 255, 0.2); /* Rim light bawah */
 }

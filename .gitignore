@@ -4,6 +4,8 @@ node_modules
 *.log
 .next
 dist
+!tools/oxlint/anti-slop/dist/
+!tools/oxlint/anti-slop/dist/**
 dist-ssr
 *.local
 .env

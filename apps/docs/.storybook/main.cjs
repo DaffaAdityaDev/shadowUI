@@ -12,10 +12,7 @@ const dynamicComponentAliases = fs.existsSync(uiComponentsDir)
         const compDir = join(uiComponentsDir, dirent.name);
         const files = fs.readdirSync(compDir);
         const mainFile = files.find(
-          (f) =>
-            f.endsWith(".tsx") &&
-            !f.includes(".test.") &&
-            !f.includes(".stories.")
+          (f) => f.endsWith(".tsx") && !f.includes(".test.") && !f.includes(".stories."),
         );
         if (!mainFile) return [];
         return [
@@ -27,27 +24,31 @@ const dynamicComponentAliases = fs.existsSync(uiComponentsDir)
       })
   : [];
 
+function getAbsolutePath(value) {
+  return dirname(require.resolve(join(value, "package.json")));
+}
+
 const config = {
   stories: ["../stories/*.stories.tsx", "../stories/**/*.stories.tsx"],
-  addons: ["@storybook/addon-links", "@storybook/addon-docs"],
+  addons: [getAbsolutePath("@storybook/addon-links"), getAbsolutePath("@storybook/addon-docs")],
   framework: {
-    name: "@storybook/react-vite",
+    name: getAbsolutePath("@storybook/react-vite"),
     options: {},
   },
 
   core: {},
 
-  async viteFinal(config, { configType }) {
+  async viteFinal(config) {
     // customize the Vite config here
     const existingAlias = config.resolve?.alias;
     const aliasArray = Array.isArray(existingAlias)
       ? existingAlias
       : existingAlias
-      ? Object.entries(existingAlias).map(([key, value]) => ({
-          find: key,
-          replacement: value,
-        }))
-      : [];
+        ? Object.entries(existingAlias).map(([key, value]) => ({
+            find: key,
+            replacement: value,
+          }))
+        : [];
 
     return {
       ...config,
@@ -57,7 +58,7 @@ const config = {
         alias: [
           ...aliasArray,
           ...dynamicComponentAliases,
-          { 
+          {
             find: "@shadoworg/shadowui",
             replacement: resolve(__dirname, "../../../packages/ui/src/index.ts"),
           },
@@ -89,4 +90,3 @@ const config = {
 };
 
 module.exports = config;
-

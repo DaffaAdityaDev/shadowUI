@@ -26,10 +26,7 @@ export { evalRoundedBoxSDF, type SDF2DResult } from "./sdf";
 export { generateDisplacementMap, evalSurfaceHeight, evalSurfaceSlope } from "./displacementMap";
 
 // 5. Standard Single-Channel Displacement Filter
-export {
-  buildDisplacementFilterContent,
-  buildStandardFilterContent,
-} from "./displacementFilter";
+export { buildDisplacementFilterContent, buildStandardFilterContent } from "./displacementFilter";
 
 // 6. Chromatic Aberration (Prism RGB Spectral Dispersion)
 export {

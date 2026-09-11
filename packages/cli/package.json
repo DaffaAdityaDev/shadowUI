@@ -2,11 +2,11 @@
   "name": "@shadoworg/cli",
   "version": "0.0.1",
   "description": "CLI tool for ShadowUI - add and customize components directly in your project",
+  "license": "MIT",
   "bin": {
     "shadowui": "./dist/index.js"
   },
   "main": "./dist/index.js",
-  "license": "MIT",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch"

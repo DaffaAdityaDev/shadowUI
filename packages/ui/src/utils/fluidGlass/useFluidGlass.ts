@@ -1,5 +1,5 @@
 // packages/ui/src/utils/fluidGlass/useFluidGlass.ts
-import * as React from "react";
+import { useRef, useEffect } from "react";
 import { getOrCreateFluidGlassFilter } from "./filterCache";
 import { generateSpecularMap } from "./specular";
 import type { FluidGlassOptions } from "./types";
@@ -9,7 +9,7 @@ import type { FluidGlassOptions } from "./types";
  * Supports Chromatic Aberration, Specular Highlights, and Continuous Convex Lens mode.
  */
 export function useFluidGlass<T extends HTMLElement = HTMLDivElement>(
-  options: FluidGlassOptions = {}
+  options: FluidGlassOptions = {},
 ) {
   const {
     bezel = 32,
@@ -26,9 +26,9 @@ export function useFluidGlass<T extends HTMLElement = HTMLDivElement>(
     mode = "border",
   } = options;
 
-  const elementRef = React.useRef<T>(null);
+  const elementRef = useRef<T>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!enabled || typeof window === "undefined") return;
 
     const el = elementRef.current;
@@ -36,8 +36,7 @@ export function useFluidGlass<T extends HTMLElement = HTMLDivElement>(
 
     // Check Chromium support (only Chromium renders SVG filters inside backdrop-filter)
     const isChromium =
-      typeof (window as any).chrome !== "undefined" ||
-      navigator.userAgent.indexOf("Chrome") !== -1;
+      typeof (window as any).chrome !== "undefined" || navigator.userAgent.indexOf("Chrome") !== -1;
 
     if (!isChromium) {
       return;
@@ -85,13 +84,19 @@ export function useFluidGlass<T extends HTMLElement = HTMLDivElement>(
       // 2. Specular Highlights & Reflection
       if (specular > 0) {
         const currentAngle = overrideAngle !== undefined ? overrideAngle : lightAngle;
-        const specularUrl = generateSpecularMap(rect.width, rect.height, dynamicBezel, effectiveRadius, {
-          intensity: specular,
-          thickness,
-          rimWidth,
-          lightAngle: currentAngle,
-          mode,
-        });
+        const specularUrl = generateSpecularMap(
+          rect.width,
+          rect.height,
+          dynamicBezel,
+          effectiveRadius,
+          {
+            intensity: specular,
+            thickness,
+            rimWidth,
+            lightAngle: currentAngle,
+            mode,
+          },
+        );
         if (specularUrl) {
           elementRef.current.style.setProperty("--ui-fluid-specular", `url("${specularUrl}")`);
         }
@@ -153,7 +158,20 @@ export function useFluidGlass<T extends HTMLElement = HTMLDivElement>(
         el.style.removeProperty("--ui-fluid-specular");
       }
     };
-  }, [bezel, scale, radius, ior, thickness, aberration, specular, lightAngle, interactiveLight, enabled, mode]);
+  }, [
+    bezel,
+    scale,
+    radius,
+    ior,
+    thickness,
+    rimWidth,
+    aberration,
+    specular,
+    lightAngle,
+    interactiveLight,
+    enabled,
+    mode,
+  ]);
 
   return elementRef;
 }

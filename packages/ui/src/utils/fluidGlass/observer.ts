@@ -3,15 +3,14 @@ import { getOrCreateFluidGlassFilter } from "./filterCache";
 import { generateSpecularMap } from "./specular";
 
 /**
- * Automatic observer for all elements containing [data-skin="fluid-glass"] on the page.
+ * Automatic observer for all elements containing [data-theme="fluid-glass"] on the page.
  * Supports reading data-fluid-* attributes reactively.
  */
 export function initFluidGlassAutoObserver(): () => void {
   if (typeof window === "undefined") return () => {};
 
   const isChromium =
-    typeof (window as any).chrome !== "undefined" ||
-    navigator.userAgent.indexOf("Chrome") !== -1;
+    typeof (window as any).chrome !== "undefined" || navigator.userAgent.indexOf("Chrome") !== -1;
 
   if (!isChromium) return () => {};
 
@@ -77,7 +76,7 @@ export function initFluidGlassAutoObserver(): () => void {
   };
 
   const scanAndObserve = () => {
-    const elements = document.querySelectorAll<HTMLElement>('[data-skin="fluid-glass"]');
+    const elements = document.querySelectorAll<HTMLElement>('[data-theme="fluid-glass"]');
     elements.forEach(observeElement);
   };
 

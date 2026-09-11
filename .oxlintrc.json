@@ -1,0 +1,44 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "nextjs", "jsx-a11y", "unicorn", "oxc"],
+  "jsPlugins": [{ "name": "anti-slop", "specifier": "./tools/oxlint/anti-slop/dist/index.mjs" }],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "nextjs/no-img-element": "warn",
+    "anti-slop/no-chained-type-assertions": "error",
+    "anti-slop/no-reduce-accumulator-copy": "error",
+    "anti-slop/no-module-mocking": "error",
+    "anti-slop/no-shape-in-symbol-names": "error",
+    "anti-slop/no-reflect-apply": "error",
+    "anti-slop/no-reflect-get": "error",
+    "anti-slop/no-widen-then-assert": "error",
+    "anti-slop/no-array-filter-map": "warn",
+    "anti-slop/no-conditional-empty-object-spread": "warn",
+    "anti-slop/no-known-value-widening": "warn",
+    "anti-slop/no-unsafe-dictionary-type": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["apps/docs/**", "packages/**"],
+      "rules": {
+        "nextjs/no-img-element": "off"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.next/**",
+    "**/storybook-static/**",
+    "**/.turbo/**",
+    "tools/oxlint/**",
+    "pnpm-lock.yaml"
+  ],
+  "env": {
+    "builtin": true,
+    "browser": true,
+    "node": true
+  }
+}

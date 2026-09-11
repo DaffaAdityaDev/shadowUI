@@ -44,7 +44,7 @@ export function evalRoundedBoxSDF(
   y: number,
   halfW: number,
   halfH: number,
-  radius: number
+  radius: number,
 ): SDF2DResult {
   // Corner radius capped at half of smallest dimension
   const effectiveR = Math.max(0, Math.min(radius, halfW, halfH));

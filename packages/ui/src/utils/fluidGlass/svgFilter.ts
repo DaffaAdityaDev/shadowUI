@@ -20,7 +20,7 @@ export function createSvgFilterElement(
   width: number,
   height: number,
   scale: number,
-  aberration: ChromaticAberration = 0
+  aberration: ChromaticAberration = 0,
 ): SVGSVGElement {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("aria-hidden", "true");

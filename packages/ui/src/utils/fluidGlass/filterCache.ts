@@ -55,7 +55,7 @@ export function getOrCreateFluidGlassFilter(
   aberration?: ChromaticAberration,
   thickness?: number,
   mode?: FluidGlassMode,
-  surface?: FluidGlassSurface
+  surface?: FluidGlassSurface,
 ): string;
 export function getOrCreateFluidGlassFilter(
   widthOrConfig: number | FluidGlassFilterConfig,
@@ -67,7 +67,7 @@ export function getOrCreateFluidGlassFilter(
   aberration: ChromaticAberration = 0,
   thickness = 1.0,
   mode: FluidGlassMode = "border",
-  surface: FluidGlassSurface = "convex-squircle"
+  surface: FluidGlassSurface = "convex-squircle",
 ): string {
   if (typeof document === "undefined") return "";
 

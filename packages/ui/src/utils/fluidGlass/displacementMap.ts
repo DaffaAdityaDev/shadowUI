@@ -13,7 +13,10 @@ import { evalRoundedBoxSDF } from "./sdf";
  * 3. "concave": y = 1 - Convex(x) (Inverted bowl depression, diverges rays outward)
  * 4. "lip": y = mix(Convex(x), Concave(x), Smootherstep(x)) (Raised tactile rim with center dip)
  */
-export function evalSurfaceHeight(x: number, surface: FluidGlassSurface = "convex-squircle"): number {
+export function evalSurfaceHeight(
+  x: number,
+  surface: FluidGlassSurface = "convex-squircle",
+): number {
   const clamped = Math.max(0, Math.min(1, x));
   switch (surface) {
     case "convex-circle":
@@ -37,7 +40,10 @@ export function evalSurfaceHeight(x: number, surface: FluidGlassSurface = "conve
  * Evaluates the surface slope / derivative at normalized position x in [0, 1].
  * Positive derivative tilts inward, negative derivative tilts outward (diverging).
  */
-export function evalSurfaceSlope(x: number, surface: FluidGlassSurface = "convex-squircle"): number {
+export function evalSurfaceSlope(
+  x: number,
+  surface: FluidGlassSurface = "convex-squircle",
+): number {
   const clamped = Math.max(0, Math.min(1, x));
   const delta = 0.005;
   const y1 = evalSurfaceHeight(Math.max(0, clamped - delta), surface);
@@ -66,7 +72,7 @@ export function generateDisplacementMap(
   ior = 1.52,
   thickness = 1.0,
   mode: FluidGlassMode = "border",
-  surface: FluidGlassSurface = "convex-squircle"
+  surface: FluidGlassSurface = "convex-squircle",
 ): string {
   if (typeof document === "undefined") return "";
 
@@ -114,8 +120,6 @@ export function generateDisplacementMap(
   const effectiveR = Math.max(0, Math.min(r, halfW, halfH));
   // Bezel width for border mode
   const effectiveB = effectiveR > 0 ? Math.min(b, effectiveR) : Math.min(b, halfW, halfH);
-  // Maximum internal distance to center for full lens mode
-  const maxDist = Math.max(1, Math.min(halfW, halfH));
 
   // Physical thickness affects lens surface slope (splay curvature)
   const safeThickness = Math.max(0.1, Math.min(3.0, t));
@@ -186,8 +190,8 @@ export function generateDisplacementMap(
       // Encode displacement vector (-1 to 1) into RGB colors (0 to 255)
       data[idx + 0] = Math.round(128 + dx * 127); // R = X axis
       data[idx + 1] = Math.round(128 + dy * 127); // G = Y axis
-      data[idx + 2] = 128;                       // B = Neutral
-      data[idx + 3] = 255;                       // A = 100%
+      data[idx + 2] = 128; // B = Neutral
+      data[idx + 3] = 255; // A = 100%
     }
   }
 

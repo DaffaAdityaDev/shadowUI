@@ -1,45 +1,37 @@
-/* Skin: Fluid Glass (Glassmorphism, Optical Refraction, Specular Reflection) */
-[data-skin="fluid-glass"] {
-  /* Surface / Background (Translucent) */
-  --ui-surface-base: rgba(255, 255, 255, 0.45);
-  --ui-surface-hover: rgba(255, 255, 255, 0.65);
-  --ui-surface-active: rgba(255, 255, 255, 0.75);
+/* Theme: Fluid Glass (Glassmorphism, Optical Refraction, Specular Reflection) */
+[data-theme="fluid-glass"] {
+  /* Surface / Background (Crystal Clear Translucent) */
+  --ui-surface-base: rgba(255, 255, 255, 0.05);
+  --ui-surface-hover: rgba(255, 255, 255, 0.12);
+  --ui-surface-active: rgba(255, 255, 255, 0.18);
 
   /* Borders (Subtle semi-transparent) */
-  --ui-border-color: rgba(255, 255, 255, 0.35);
+  --ui-border-color: rgba(255, 255, 255, 0.25);
   --ui-border-width: 1px;
   --ui-border: var(--ui-border-width) solid var(--ui-border-color);
 
   /* Glass Effects */
   --ui-fluid-filter: ;
   --ui-fluid-specular: none;
-  --ui-backdrop-blur: 16px;
-  --ui-backdrop-saturate: 180%;
-  backdrop-filter: var(--ui-fluid-filter, ) blur(var(--ui-backdrop-blur)) saturate(var(--ui-backdrop-saturate));
-  -webkit-backdrop-filter: var(--ui-fluid-filter, ) blur(var(--ui-backdrop-blur)) saturate(var(--ui-backdrop-saturate));
-
-  /* Multi-layer background: Layer 1 = Specular Highlight, Layer 2 = Translucent Surface */
-  background: var(--ui-fluid-specular, none), var(--ui-surface-base);
-  background-size: 100% 100%, auto;
-  background-repeat: no-repeat, repeat;
+  --ui-backdrop-blur: 0px;
+  --ui-backdrop-saturate: 150%;
 
   /* Dynamic Glass Shadow & Inner Specular Highlight */
-  --ui-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12),
-               inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
-  --ui-shadow-hover: 0 12px 40px 0 rgba(31, 38, 135, 0.2),
-                     inset 0 1px 1px 0 rgba(255, 255, 255, 1);
-  --ui-radius: 1.25rem; /* 20px (curved squircle) */
+  --ui-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
+  --ui-shadow-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+  --ui-radius: 1.75rem; /* 28px (squircle radius matching testglass) */
 
   /* Text colors */
-  --ui-text-contrast: #0f172a;
-  --ui-text-muted: #334155;
+  --ui-text-contrast: #ffffff;
+  --ui-text-muted: #e2e8f0;
 
   /* Button Tokens */
   --ui-btn-filled-bg: linear-gradient(135deg, rgba(99, 102, 241, 0.85), rgba(79, 70, 229, 0.95));
   --ui-btn-filled-hover: linear-gradient(135deg, rgba(99, 102, 241, 0.95), rgba(67, 56, 202, 1));
   --ui-btn-filled-active: rgba(67, 56, 202, 1);
   --ui-btn-filled-text: #ffffff;
-  --ui-btn-filled-shadow: 0 4px 20px 0 rgba(99, 102, 241, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
+  --ui-btn-filled-shadow:
+    0 4px 20px 0 rgba(99, 102, 241, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
 
   --ui-btn-outline-bg: rgba(255, 255, 255, 0.25);
   --ui-btn-outline-border: rgba(255, 255, 255, 0.45);
@@ -55,31 +47,21 @@
   --ui-badge-subtle-border: 1px solid rgba(255, 255, 255, 0.45);
 }
 
-[data-skin="fluid-glass"][data-interactive="true"]:hover,
-[data-skin="fluid-glass"].cursor-pointer:hover {
-  background: var(--ui-fluid-specular, none), var(--ui-surface-hover);
-}
-
-[data-skin="fluid-glass"][data-interactive="true"]:active,
-[data-skin="fluid-glass"].cursor-pointer:active {
-  background: var(--ui-fluid-specular, none), var(--ui-surface-active);
-}
-
 /* Dark mode for Fluid Glass */
-[data-theme="dark"][data-skin="fluid-glass"],
-.dark [data-skin="fluid-glass"] {
+[data-theme="dark"][data-theme="fluid-glass"],
+.dark [data-theme="fluid-glass"] {
   --ui-surface-base: rgba(15, 23, 42, 0.55);
   --ui-surface-hover: rgba(30, 41, 59, 0.7);
   --ui-surface-active: rgba(51, 65, 85, 0.8);
   --ui-border-color: rgba(255, 255, 255, 0.12);
-  --ui-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4),
-               inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+  --ui-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
   --ui-text-contrast: #ffffff;
   --ui-text-muted: #94a3b8;
 
   --ui-btn-filled-bg: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(79, 70, 229, 1));
   --ui-btn-filled-hover: linear-gradient(135deg, rgba(129, 140, 248, 1), rgba(99, 102, 241, 1));
-  --ui-btn-filled-shadow: 0 4px 20px 0 rgba(99, 102, 241, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+  --ui-btn-filled-shadow:
+    0 4px 20px 0 rgba(99, 102, 241, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
 
   --ui-btn-outline-bg: rgba(255, 255, 255, 0.08);
   --ui-btn-outline-border: rgba(255, 255, 255, 0.18);

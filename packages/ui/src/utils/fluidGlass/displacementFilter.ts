@@ -8,7 +8,7 @@ export function buildDisplacementFilterContent(
   mapUrl: string,
   width: number,
   height: number,
-  scale: number
+  scale: number,
 ): string {
   return `
     <feImage href="${mapUrl}" result="displacementMap" width="${width}" height="${height}" />

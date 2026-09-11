@@ -16,7 +16,6 @@ const componentEntries = readdirSync("src/components", { withFileTypes: true })
       .map((fileName) => join(componentDir, fileName).replace(/\\/g, "/"));
   });
 
-
 export default defineConfig((options) => ({
   entryPoints: [
     "src/index.ts",
@@ -33,13 +32,11 @@ export default defineConfig((options) => ({
   loader: {
     ".css": "file",
   },
-  dts: {
-    entry: [
-      "src/index.ts",
-      "src/utils/fluidGlass/index.ts",
-      ...componentEntries,
-    ],
-  },
+  dts: options.watch
+    ? false
+    : {
+        entry: ["src/index.ts", "src/utils/fluidGlass/index.ts", ...componentEntries],
+      },
   // dts: true,
   treeshake: true,
   splitting: true,
@@ -63,7 +60,7 @@ export default defineConfig((options) => ({
       if (cssFile) {
         copyFileSync(join(distDir, cssFile), join(distDir, "styles.css"));
       }
-    } catch (error) {
+    } catch {
       // Silent fail
     }
   },

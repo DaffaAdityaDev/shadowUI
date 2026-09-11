@@ -97,7 +97,7 @@ export function calculateBlinnPhong(
   normal: Vec3,
   lightDir: Vec3,
   viewDir: Vec3,
-  shininess: number
+  shininess: number,
 ): number {
   // Halfway vector H = normalize(L + V)
   const hx = lightDir.x + viewDir.x;
@@ -118,7 +118,10 @@ export function calculateBlinnPhong(
  * F(θ) = F0 + (1 - F0) * (1 - N · V)^5
  */
 export function calculateFresnel(normal: Vec3, viewDir: Vec3, f0 = 0.04): number {
-  const nDotV = Math.max(0, Math.min(1, normal.x * viewDir.x + normal.y * viewDir.y + normal.z * viewDir.z));
+  const nDotV = Math.max(
+    0,
+    Math.min(1, normal.x * viewDir.x + normal.y * viewDir.y + normal.z * viewDir.z),
+  );
   return f0 + (1 - f0) * Math.pow(1 - nDotV, 5);
 }
 
@@ -132,9 +135,9 @@ const specularCache = new Map<string, string>();
 export function generateSpecularMap(
   width: number,
   height: number,
-  bezel = 32,
+  _bezel = 32,
   radius = 28,
-  options: SpecularOptions = {}
+  options: SpecularOptions = {},
 ): string {
   if (typeof document === "undefined" || width <= 0 || height <= 0) return "";
 
@@ -183,7 +186,6 @@ export function generateSpecularMap(
   const halfW = canvas.width / 2;
   const halfH = canvas.height / 2;
   const effectiveR = Math.max(0, Math.min(roundedR, halfW, halfH));
-  const maxDist = Math.max(1, Math.min(halfW, halfH));
 
   const maxAngle = Math.min(1.2, 0.75 * safeThickness);
   const lightDir = calculateLightDirection(roundedA, lightElevation);

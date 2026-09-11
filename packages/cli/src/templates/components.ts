@@ -11,10 +11,10 @@ export const TEMPLATES: Record<string, ComponentTemplate> = {
   card: {
     name: "card",
     filename: "card.tsx",
-    description: "Card component with smart skin injection and clean presentation",
-    code: `import * as React from "react";
+    description: "Card component with token-based multi-theming and dynamic theme injection",
+    code: `import { forwardRef, useRef, type HTMLAttributes } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { useSkin, useMergeRefs, type SkinOptions } from "@shadoworg/shadowui";
+import { useTheme, useMergeRefs, type ThemeOptions } from "@shadoworg/shadowui";
 
 export const cardVariants = cva(
   [
@@ -24,20 +24,23 @@ export const cardVariants = cva(
   ],
   {
     variants: {
-      skin: {
-        primer: [
-          "bg-[var(--ui-surface-base)]",
-          "border-[var(--ui-border)]",
-          "shadow-[var(--ui-shadow)]",
+      variant: {
+        filled: [
+          "[background:var(--ui-fluid-specular,none),var(--ui-surface-base)]",
+          "[border:var(--ui-border)]",
+          "[box-shadow:var(--ui-shadow)]",
+          "[backdrop-filter:var(--ui-fluid-filter,)_blur(var(--ui-backdrop-blur,0px))_saturate(var(--ui-backdrop-saturate,100%))]",
+          "[-webkit-backdrop-filter:var(--ui-fluid-filter,)_blur(var(--ui-backdrop-blur,0px))_saturate(var(--ui-backdrop-saturate,100%))]",
         ],
-        "fluid-glass": [
-          "[background:var(--ui-fluid-specular,none),var(--ui-surface-base,rgba(255,255,255,0.08))]",
-          "[background-size:100%_100%,auto]",
-          "[background-repeat:no-repeat,repeat]",
-          "[border:var(--ui-border,1px_solid_rgba(255,255,255,0.15))]",
-          "[box-shadow:var(--ui-shadow,0_8px_32px_rgba(0,0,0,0.25))]",
-          "[backdrop-filter:var(--ui-fluid-filter,)_blur(var(--ui-backdrop-blur,16px))_saturate(var(--ui-backdrop-saturate,180%))]",
-          "[-webkit-backdrop-filter:var(--ui-fluid-filter,)_blur(var(--ui-backdrop-blur,16px))_saturate(var(--ui-backdrop-saturate,180%))]",
+        outline: [
+          "bg-transparent",
+          "[border:var(--ui-border)]",
+          "shadow-none",
+        ],
+        ghost: [
+          "bg-transparent",
+          "border-transparent",
+          "shadow-none",
         ],
       },
       padding: {
@@ -50,32 +53,40 @@ export const cardVariants = cva(
         true: [
           "cursor-pointer",
           "hover:-translate-y-0.5",
+          "active:translate-y-0",
         ],
         false: "",
       },
     },
     compoundVariants: [
       {
-        skin: "primer",
+        variant: "filled",
+        interactive: true,
+        className: [
+          "hover:[background:var(--ui-fluid-specular,none),var(--ui-surface-hover)]",
+          "hover:[box-shadow:var(--ui-shadow-hover)]",
+          "active:[background:var(--ui-fluid-specular,none),var(--ui-surface-active)]",
+        ],
+      },
+      {
+        variant: "outline",
         interactive: true,
         className: [
           "hover:bg-[var(--ui-surface-hover)]",
-          "hover:shadow-[var(--ui-shadow-hover)]",
           "active:bg-[var(--ui-surface-active)]",
         ],
       },
       {
-        skin: "fluid-glass",
+        variant: "ghost",
         interactive: true,
         className: [
-          "hover:[background:var(--ui-fluid-specular,none),var(--ui-surface-hover,rgba(255,255,255,0.15))]",
-          "hover:[box-shadow:var(--ui-shadow-hover,0_12px_40px_rgba(0,0,0,0.35))]",
-          "active:[background:var(--ui-fluid-specular,none),var(--ui-surface-active,rgba(255,255,255,0.2))]",
+          "hover:bg-[var(--ui-surface-hover)]",
+          "active:bg-[var(--ui-surface-active)]",
         ],
       },
     ],
     defaultVariants: {
-      skin: "primer",
+      variant: "filled",
       padding: "md",
       interactive: false,
     },
@@ -83,95 +94,58 @@ export const cardVariants = cva(
 );
 
 export interface CardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    Omit<VariantProps<typeof cardVariants>, "skin"> {
-  /** Pilihan tema / skin aktif ("primer" | "fluid-glass") */
-  skin?: "primer" | "fluid-glass" | (string & {});
-  "data-skin"?: string;
-
-  /** Konfigurasi modular skin (untuk advance/generic skin usage) */
-  skinProps?: SkinOptions;
-  skinOptions?: SkinOptions;
-
-  // Direct optical props untuk kemudahan DX
-  fluidBezel?: number;
-  fluidScale?: number;
-  fluidIor?: number;
-  fluidThickness?: number;
-  fluidRimWidth?: number;
-  fluidAberration?: number | { r?: number; g?: number; b?: number; red?: number; green?: number; blue?: number };
-  fluidSpecular?: number;
-  fluidLightAngle?: number;
-  fluidInteractiveLight?: boolean;
-  fluidMode?: "full" | "border";
-  fluidSurface?: "convex-squircle" | "convex-circle" | "concave" | "lip";
+  extends HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {
+  theme?: string;
+  themeVersion?: string | number;
+  "data-theme"?: string;
+  "data-theme-version"?: string;
+  themeOptions?: ThemeOptions;
+  themeProps?: ThemeOptions;
+  [key: string]: any;
 }
 
-/**
- * Card Component (100% Dumb Presentational Component).
- * Murni bertindak sebagai renderer DOM & CVA styling.
- * Seluruh side-effects, dynamic loader, dan event tracking ditangani secara modular oleh hook useSkin.
- */
-export const Card = React.forwardRef<HTMLDivElement, CardProps>(
+export const Card = forwardRef<HTMLDivElement, CardProps>(
   (
     {
       className,
       padding,
       interactive,
-      skin = "primer",
-      "data-skin": dataSkin,
-      skinProps,
-      skinOptions,
-      fluidBezel,
-      fluidScale,
-      fluidIor,
-      fluidThickness,
-      fluidRimWidth,
-      fluidAberration,
-      fluidSpecular,
-      fluidLightAngle,
-      fluidInteractiveLight,
-      fluidMode,
-      fluidSurface,
+      variant = "filled",
+      theme,
+      themeVersion,
+      "data-theme": dataTheme,
+      "data-theme-version": dataThemeVersion,
+      themeProps,
+      themeOptions,
       style,
       children,
-      ...props
+      ...rest
     },
     forwardedRef
   ) => {
-    const internalRef = React.useRef<HTMLDivElement>(null);
+    const internalRef = useRef<HTMLDivElement>(null);
     const mergedRef = useMergeRefs(internalRef, forwardedRef);
+    const resolvedTheme = theme ?? dataTheme ?? "primer";
+    const resolvedVersion = themeVersion ?? dataThemeVersion;
 
-    const effectiveSkin = (skin ?? dataSkin ?? "primer") as "primer" | "fluid-glass";
-
-    // Gabungkan opsi tanpa kalkulasi logika atau mutasi di dalam Card
-    const combinedSkinProps: SkinOptions = {
-      bezel: fluidBezel,
-      scale: fluidScale,
-      ior: fluidIor,
-      thickness: fluidThickness,
-      rimWidth: fluidRimWidth,
-      aberration: fluidAberration,
-      specular: fluidSpecular,
-      lightAngle: fluidLightAngle,
-      interactiveLight: fluidInteractiveLight,
-      mode: fluidMode,
-      surface: fluidSurface,
-      ...skinOptions,
-      ...skinProps,
-    };
-
-    // Inject runtime skin effects (ResizeObserver, SVG Filter, Canvas Specular) via hook
-    useSkin(effectiveSkin, combinedSkinProps, internalRef);
+    const descriptor = useTheme(
+      resolvedTheme,
+      { ...themeOptions, ...themeProps },
+      internalRef,
+      resolvedVersion
+    );
 
     return (
       <div
         ref={mergedRef}
-        data-skin={effectiveSkin}
+        data-theme={descriptor.name}
+        data-theme-version={descriptor.majorVersion}
+        data-variant={variant}
         data-interactive={interactive ? "true" : undefined}
-        className={cn(cardVariants({ skin: effectiveSkin, padding, interactive, className }))}
+        className={cardVariants({ variant, padding, interactive, className })}
         style={style}
-        {...props}
+        {...rest}
       >
         {children}
       </div>
@@ -186,48 +160,153 @@ Card.displayName = "Card";
     name: "button",
     filename: "button.tsx",
     description: "Interactive button component conforming to theme design tokens",
-    code: `import * as React from "react";
+    code: `import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center font-medium transition-all duration-150 rounded-[var(--ui-radius)] cursor-pointer disabled:opacity-50 disabled:pointer-events-none select-none",
+  [
+    "inline-flex items-center justify-center gap-2 font-medium transition-all duration-150 select-none cursor-pointer",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2",
+    "disabled:pointer-events-none disabled:opacity-50",
+    "[border-radius:var(--ui-radius)]",
+    "[backdrop-filter:blur(var(--ui-backdrop-blur))_saturate(var(--ui-backdrop-saturate))]",
+    "[-webkit-backdrop-filter:blur(var(--ui-backdrop-blur))_saturate(var(--ui-backdrop-saturate))]",
+  ],
   {
     variants: {
       variant: {
-        filled: "bg-[var(--ui-btn-filled-bg)] text-[var(--ui-btn-filled-text)] shadow-[var(--ui-btn-filled-shadow)] hover:opacity-90 active:scale-98",
-        outline: "border border-[var(--ui-btn-outline-border)] bg-[var(--ui-btn-outline-bg)] text-[var(--ui-btn-outline-text)] hover:bg-[var(--ui-btn-outline-hover)]",
-        ghost: "bg-transparent text-[var(--ui-btn-ghost-text)] hover:bg-[var(--ui-btn-ghost-hover)]",
+        filled: [
+          "[box-shadow:var(--ui-btn-filled-shadow)]",
+          "hover:opacity-95 hover:-translate-y-0.5",
+          "active:translate-y-0",
+        ],
+        outline: [
+          "border",
+          "hover:-translate-y-0.5",
+          "active:translate-y-0",
+        ],
+        ghost: [
+          "bg-transparent",
+          "active:scale-95",
+        ],
       },
       size: {
         sm: "h-8 px-3 text-sm",
         md: "h-10 px-4 text-base",
         lg: "h-12 px-6 text-lg",
       },
+      tone: {
+        default: "",
+        danger: "",
+      },
     },
+    compoundVariants: [
+      {
+        variant: "filled",
+        tone: "default",
+        class: "[background:var(--ui-btn-filled-bg)] text-[var(--ui-btn-filled-text)]",
+      },
+      {
+        variant: "filled",
+        tone: "danger",
+        class: "bg-red-600 hover:bg-red-700 active:bg-red-800 text-white focus-visible:ring-red-500",
+      },
+      {
+        variant: "outline",
+        tone: "default",
+        class: "[background:var(--ui-btn-outline-bg)] [border-color:var(--ui-btn-outline-border)] text-[var(--ui-btn-outline-text)] hover:[background:var(--ui-btn-outline-hover)]",
+      },
+      {
+        variant: "outline",
+        tone: "danger",
+        class: "border-red-500 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 focus-visible:ring-red-500",
+      },
+      {
+        variant: "ghost",
+        tone: "default",
+        class: "text-[var(--ui-btn-ghost-text)] hover:[background:var(--ui-btn-ghost-hover)]",
+      },
+      {
+        variant: "ghost",
+        tone: "danger",
+        class: "text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 focus-visible:ring-red-500",
+      },
+    ],
     defaultVariants: {
       variant: "filled",
       size: "md",
+      tone: "default",
     },
   }
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  skin?: "primer" | "fluid-glass";
+  asChild?: boolean;
+  loading?: boolean;
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
+  theme?: string;
+  themeVersion?: string | number;
+  "data-theme"?: string;
+  "data-theme-version"?: string;
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, skin = "primer", children, ...props }, ref) => {
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className,
+      variant,
+      size,
+      tone,
+      theme,
+      themeVersion,
+      "data-theme": dataTheme,
+      "data-theme-version": dataThemeVersion,
+      asChild = false,
+      loading = false,
+      leftIcon,
+      rightIcon,
+      disabled,
+      children,
+      ...rest
+    },
+    ref
+  ) => {
+    const Comp = asChild ? Slot : "button";
+    const isDisabled = disabled || loading;
+    const resolvedTheme = theme ?? dataTheme;
+    const resolvedVersion = themeVersion ?? dataThemeVersion;
+
     return (
-      <button
+      <Comp
         ref={ref}
-        data-skin={skin}
-        className={buttonVariants({ variant, size, className })}
-        {...props}
+        data-theme={resolvedTheme}
+        data-theme-version={resolvedVersion}
+        className={buttonVariants({ variant, size, tone, className })}
+        disabled={isDisabled}
+        aria-disabled={isDisabled}
+        {...rest}
       >
+        {loading ? (
+          <svg
+            className="animate-spin -ml-0.5 mr-1.5 h-4 w-4 text-current"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+          </svg>
+        ) : (
+          leftIcon
+        )}
         {children}
-      </button>
+        {!loading && rightIcon}
+      </Comp>
     );
   }
 );
@@ -239,39 +318,104 @@ Button.displayName = "Button";
     name: "badge",
     filename: "badge.tsx",
     description: "Badge tag component with subtle, solid, and outline variants",
-    code: `import * as React from "react";
+    code: `import { forwardRef, type HTMLAttributes } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
 export const badgeVariants = cva(
-  "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold tracking-wide uppercase transition-colors",
+  [
+    "inline-flex items-center px-2.5 py-0.5 text-xs font-semibold transition-all duration-150 select-none",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2",
+    "[border-radius:calc(var(--ui-radius)*1.5)]",
+    "[backdrop-filter:blur(var(--ui-backdrop-blur))_saturate(var(--ui-backdrop-saturate))]",
+    "[-webkit-backdrop-filter:blur(var(--ui-backdrop-blur))_saturate(var(--ui-backdrop-saturate))]",
+  ],
   {
     variants: {
       variant: {
-        subtle: "bg-[var(--ui-badge-subtle-bg,rgba(255,255,255,0.15))] text-[var(--ui-badge-subtle-text,#ffffff)] border border-[var(--ui-badge-subtle-border,rgba(255,255,255,0.2))]",
-        solid: "bg-indigo-600 text-white shadow-sm",
-        outline: "border border-white/30 text-white",
+        filled: "",
+        outline: "border",
+        subtle: "border",
+      },
+      tone: {
+        default: "",
+        danger: "",
       },
     },
+    compoundVariants: [
+      {
+        variant: "filled",
+        tone: "default",
+        class: "[background:var(--ui-btn-filled-bg)] text-[var(--ui-btn-filled-text)] [box-shadow:var(--ui-btn-filled-shadow)]",
+      },
+      {
+        variant: "filled",
+        tone: "danger",
+        class: "bg-red-600 text-white shadow-sm",
+      },
+      {
+        variant: "outline",
+        tone: "default",
+        class: "[border-color:var(--ui-btn-outline-border)] text-[var(--ui-btn-outline-text)] [background:var(--ui-btn-outline-bg)]",
+      },
+      {
+        variant: "outline",
+        tone: "danger",
+        class: "border-red-500 text-red-600 [background:var(--ui-btn-outline-bg)]",
+      },
+      {
+        variant: "subtle",
+        tone: "default",
+        class: "[background:var(--ui-badge-subtle-bg)] text-[var(--ui-badge-subtle-text)] [border-color:var(--ui-border-color)]",
+      },
+      {
+        variant: "subtle",
+        tone: "danger",
+        class: "bg-red-100 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-900/50",
+      },
+    ],
     defaultVariants: {
-      variant: "subtle",
+      variant: "filled",
+      tone: "default",
     },
   }
 );
 
 export interface BadgeProps
-  extends React.HTMLAttributes<HTMLSpanElement>,
+  extends HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof badgeVariants> {
-  skin?: "primer" | "fluid-glass";
+  theme?: string;
+  themeVersion?: string | number;
+  "data-theme"?: string;
+  "data-theme-version"?: string;
 }
 
-export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, variant, skin = "primer", children, ...props }, ref) => {
+export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
+  (
+    {
+      className,
+      variant,
+      tone,
+      theme,
+      themeVersion,
+      "data-theme": dataTheme,
+      "data-theme-version": dataThemeVersion,
+      children,
+      ...rest
+    },
+    ref
+  ) => {
+    const resolvedTheme = theme ?? dataTheme;
+    const resolvedVersion = themeVersion
+      ? String(themeVersion)
+      : dataThemeVersion;
+
     return (
       <span
         ref={ref}
-        data-skin={skin}
-        className={badgeVariants({ variant, className })}
-        {...props}
+        data-theme={resolvedTheme}
+        data-theme-version={resolvedVersion}
+        className={badgeVariants({ variant, tone, className })}
+        {...rest}
       >
         {children}
       </span>
